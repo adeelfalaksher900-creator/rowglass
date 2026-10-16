@@ -6,3 +6,4 @@ worker/index.js
 .env.*
 !.env.example
 *.tar.gz
+rowglass-review.*

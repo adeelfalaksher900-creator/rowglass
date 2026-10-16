@@ -2,11 +2,15 @@
 
 SQL repairs with executable counterexamples.
 
-Rowglass investigates queries that run successfully but return the wrong rows. It executes a candidate on several small synthetic databases, compares it with an independent hand-authored reference, and reduces a mismatch to a smaller database. A Nebius Token Factory adapter asks NVIDIA Nemotron for a repair or a new adversarial fixture and can feed execution failures back for one revision.
+Rowglass helps developers review a query that runs successfully but silently drops rows or inflates totals. It compares the query with an independent reference on small synthetic databases, reduces a disagreement to an inspectable example, and tests a proposed SQL patch before applying it. The reusable browser workbench and repository CLI share the same SQLite evaluator.
 
-## Current status
+Built for the **Coding and Agentic Engineering** track of the Nebius x NVIDIA Global AI Hackathon. [MIT licensed](LICENSE).
 
-The local SQLite workbench is implemented and browser-tested for the reference-apply workflow. The HTTP model adapter is implemented and tested using a mocked transport. **Live Nebius inference has not been verified and this is not yet a qualified hackathon submission.** Google sign-in was stopped at device approval. There is no fallback pretending to be an AI response: live controls remain unavailable without a configured key, while the labeled hand-authored reference workflow works locally.
+## Status
+
+Version 0.2 implements custom case packs, isolated SQL execution, seeded stress fixtures, a bounded repair loop, SQL diffs, opt-in local drafts and downloadable review artifacts. Local checks work without an account. The hosted preview is owner-private.
+
+**Actual Nebius inference remains unverified.** GitHub sign-in succeeded, but the Nebius account requires billing/provisioning setup before a model key and credits are available. The implemented HTTP adapter has mocked-transport coverage; those tests and the separately labeled hand-authored reference repairs are not live model results. This is a review build, not a complete hackathon submission.
 
 ## Run locally
 
@@ -18,38 +22,79 @@ npm run check
 npm start
 ```
 
-Open http://localhost:3000. The synthetic SQLite workflow needs no account or key.
+Open http://localhost:3000. No production database is connected. All example data is synthetic.
 
-For live generation, configure `NEBIUS_API_KEY` as a server environment variable before `npm start`. Never put a key into source, frontend code, a URL or a committed environment file. The adapter calls `https://api.tokenfactory.nebius.com/v1/chat/completions` with NVIDIA's `nvidia/nvidia-nemotron-3-nano-30b-a3b` model, as documented in the official Nebius cookbook. Use granted credits only; no dedicated GPU is created by this project.
+### Five-minute browser workflow
 
-## Try the workflow
+1. Open the missing-customers case: the baseline passes 3/9 checks.
+2. Inspect the failing output and the reduced one-row database.
+3. Load the explicitly **hand-authored reference repair**, inspect its diff and 9/9 results, then apply it.
+4. Run 24 additional fixtures with seed 2026. The reference passes 33/33 finite checks.
+5. Export a sealed JSON review, Markdown review or SQL patch. The digest detects changed content; it does not authenticate a model response.
+6. Open **Your case**, load the inventory example, confirm it contains synthetic data, and validate it. Its baseline fails 2/4 checks; its reference passes 4/4.
 
-1. Open the first case. Its original query passes the happy example but fails six edge checks.
-2. Inspect the missing-customer output and the reduced one-row witness.
-3. Choose **Load hand-authored reference repair**. Its label explicitly says this is not a model response.
-4. Review the proposed SQL and its 9/9 results, then apply it locally.
-5. Open **Evaluation**. All three references pass 9/9; all nine intentionally wrong repairs are rejected.
-6. With a real configured Nebius key, request a model repair. Inspect provider response ID, model, token usage and executed tests. Failures are sent back for at most one revision. No success is inferred from the model's explanation.
+Query text is transient unless you explicitly choose **Save local draft**. Restore and forget controls manage that single browser draft. Model calls require a server-side key and send the selected synthetic schema, contract, SQL and bounded failure evidence to Nebius.
 
-## What is implemented
+## Check a query in a repository
 
-- Three original incidents: LEFT JOIN filtering, order/item fan-out and NOT IN with NULL.
-- Independent reference queries and nine fixtures per incident.
-- Multiset result comparison, including duplicate counts and exact output column contract; row order is ignored.
-- Primary/foreign-key validation, finite typed fixture values and a 100-row input cap.
-- Single-row deletion reduction under schema constraints, with an explicit non-global-minimum limitation.
-- Real SQLite in a disposable browser worker, with a timeout and a 1,000-result-row cap.
-- A validated Nebius/Nemotron JSON adapter, bounded repair feedback loop, request cancellation, proposal review and JSON export.
-- Explicit setup/error states. A model credential is never shipped to the browser.
+```sh
+# Baseline: 2/4 checks, exit code 1.
+node cli/rowglass.mjs check examples/inventory.case.json --out /tmp/baseline
 
-## Checks and limits
+# Independent correct query: 4/4 checks, exit code 0.
+node cli/rowglass.mjs check examples/inventory.case.json \
+  --query examples/inventory.good.sql --out /tmp/review
 
-`npm test` runs engine and mocked-adapter checks. `node scripts/evaluate.mjs` writes the reproducible synthetic evaluation to `docs/local-evaluation.json`. It is not a Nemotron accuracy benchmark, Spider score, production SQL audit, universal equivalence check or security certification.
+node cli/rowglass.mjs verify /tmp/review.json
+```
 
-The initial hosted preview is owner-private. Public, unrestricted judge access, durable inference quotas, real Nebius execution evidence and final English demo footage remain release gates. In-memory per-process throttling is not a durable public-service quota. No production database connections or user data imports are supported.
+`check` writes JSON and Markdown reviews. Exit codes: 0 when all finite checks agree; 1 for a mismatch; 2 for invalid input or setup. [The CI workflow](.github/workflows/check.yml) runs local checks and the custom inventory example. A passing suite is not a universal correctness proof.
 
-See [research](docs/RESEARCH.md), [rule mapping](docs/RULES-AUDIT.md), [validation](docs/VALIDATION.md), [product scope](PRODUCT.md) and [AI disclosure](docs/AI-DISCLOSURE.md).
+### Bring your own synthetic case
+
+Start with [inventory.case.json](examples/inventory.case.json). A `rowglass.case.v1` pack declares a contract, structured table/column definitions, baseline SQL, independent reference SQL and fixtures. Raw DDL is rejected. Each table starts with an integer primary key; foreign keys reference an earlier table. Supported types are integer, real and text.
+
+Limits: 6 tables, 16 columns per table, 30 fixtures and 100 input rows per fixture. The caller owns the business correctness of the supplied reference. Rowglass validates schema constraints and execution; it cannot establish that the reference expresses the intended business rule. See [the case format and CLI](docs/CASE-PACKS.md).
+
+## NVIDIA Nemotron on Nebius
+
+Configure `NEBIUS_API_KEY` outside source as a server environment variable, then start the app or run:
+
+```sh
+node cli/rowglass.mjs repair examples/inventory.case.json \
+  --out /tmp/model-review
+```
+
+`repair` never overwrites the input SQL file. It produces a candidate, unified patch and executed review. One task makes at most two repair calls: propose, execute, send bounded failures back, then execute the revision. Challenge mode keeps the original SQL and tests a proposed synthetic fixture. The reference SQL and full evaluation suite are excluded from model context.
+
+The adapter calls `https://api.tokenfactory.nebius.com/v1/chat/completions`. Its default NVIDIA model ID is `nvidia/nvidia-nemotron-3-nano-30b-a3b`, taken from the official cookbook. Before a live run, confirm availability in your Token Factory catalog; `NEBIUS_MODEL` accepts a `nvidia/...` override. No currently available model, granted credits, latency or model accuracy is claimed without a successful call.
+
+Credentials stay server-side. The private server has a shared, in-memory 12-call hourly cap. This is not a durable quota or authentication layer. `ROWGLASS_PUBLIC=true` disables live inference even when a key is present. Keep this guard until a public service has a durable quota gate; local testing remains available. The project provisions no GPU and adds no Supabase database because it needs no persistent application records. Supabase would not replace the required Nebius runtime.
+
+## What the evidence means
+
+| Control | Observed local result | Interpretation |
+|---|---|---|
+| Three built-in references, 9 curated + 24 seeded fixtures each | 99/99 agree, seed 2026 | Positive controls for these synthetic tasks |
+| Nine deliberately wrong repairs | 9/9 rejected | Negative controls for the evaluator |
+| Custom inventory reference | 4/4 agree | Reusable case format and CLI execution |
+| Adapter tests | Mocked provider transport | Protocol, validation and error handling only |
+| Live NVIDIA/Nebius results | Pending | No runtime/model benchmark claim |
+
+Run `node scripts/evaluate.mjs` to regenerate [the local control report](docs/local-evaluation.json). Result comparison preserves duplicate counts and exact column names, including empty outputs; row order is ignored. A greedy reducer removes rows while preserving a valid value mismatch. The result is single-row irreducible under that procedure, not globally smallest.
+
+SQL runs in a disposable browser worker or Node worker thread with an eight-second timeout. Output is capped at 1,000 rows, 32 columns and one million serialized characters per execution. Blob allocation and formatting functions are disabled. These resource guards are not a formal memory sandbox or security certification.
+
+## Review and release materials
+
+- [Research and track decision](docs/RESEARCH.md)
+- [Rule-by-rule status](docs/RULES-AUDIT.md) and [judging evidence](docs/JUDGING-EVIDENCE.md)
+- [Validation and observed limitations](docs/VALIDATION.md)
+- [Devpost draft](docs/DEVPOST-DRAFT.md) and [AI disclosure](docs/AI-DISCLOSURE.md)
+- [Access blocker](docs/ACCESS-BLOCKER.md)
+
+The public demo, real Nebius execution evidence, final eligibility answers and public English YouTube video remain submission gates. Video, voice and gallery production are deferred until project review. No track participation counts, intended-user study, production adoption or winning odds are invented.
 
 ## License
 
-MIT. Third-party libraries and fonts retain their own licenses. See THIRD-PARTY-NOTICES.md.
+MIT. Bundled libraries and fonts retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md) and [license copies](licenses/). The app also serves bundled notices at `/licenses.txt`.

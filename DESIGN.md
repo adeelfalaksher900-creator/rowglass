@@ -1,5 +1,5 @@
 ---
-version: alpha
+version: "0.2"
 colors:
   ink: "#192b38"
   muted: "#566a77"
@@ -50,7 +50,7 @@ Flat evidence panels with a one-pixel border. Only the selected case has subtle 
 Twelve-pixel panels, seven-pixel controls, five-pixel status badges. No ornamental pill collection.
 
 ## Components
-Button and Badge are shared primitives in src/App.jsx. DataTable and Output own all result tables. Case selection is a list of native buttons, not an authored select. No date picker, modal, destructive delete or authentication UI exists. Native details is used for fixture disclosure. CSS variables map directly to these shared primitives.
+Button and Badge are shared primitives in src/App.jsx. DataTable and Output own all result tables. Case selection uses native buttons, including one imported custom case. Native details discloses fixture rows and the SQL diff. A JSON textarea and explicit synthetic-data checkbox own case import. The review toolbar manages downloads and one opt-in local draft. No date picker, modal, payment or authentication UI exists. CSS variables map directly to these shared primitives.
 
 ## Do's and Don'ts
 Use current counts calculated by SQLite. Label reference repairs. Disable model controls while not configured and explain why. Never turn a replay, mock or reference query into live model evidence. Honor reduced motion and visible keyboard focus. Never hide scrollbars.

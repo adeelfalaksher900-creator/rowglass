@@ -1,0 +1,18 @@
+{
+  "format": "rowglass.case.v1",
+  "id": "inventory-review",
+  "title": "Reservations with no matching stock",
+  "contract": "For every product return product_id and units_available, computed as stock minus the sum of reserved units. Include products without reservations. Count separate reservations even when their quantities match.",
+  "tables": [
+    {"name":"products","columns":[{"name":"id","type":"integer","primaryKey":true},{"name":"stock","type":"integer"}]},
+    {"name":"reservations","columns":[{"name":"id","type":"integer","primaryKey":true},{"name":"product_id","type":"integer","references":{"table":"products","column":"id"}},{"name":"units","type":"integer"}]}
+  ],
+  "baselineSQL":"SELECT p.id AS product_id, p.stock - SUM(r.units) AS units_available FROM products p JOIN reservations r ON r.product_id=p.id GROUP BY p.id, p.stock;",
+  "referenceSQL":"SELECT p.id AS product_id, p.stock - COALESCE(SUM(r.units),0) AS units_available FROM products p LEFT JOIN reservations r ON r.product_id=p.id GROUP BY p.id, p.stock;",
+  "fixtures":[
+    {"id":"happy","label":"One product, one reservation","rows":{"products":[[1,10]],"reservations":[[1,1,3]]}},
+    {"id":"none","label":"Product without reservations","rows":{"products":[[1,10]],"reservations":[]}},
+    {"id":"repeated","label":"Separate equal-sized reservations","rows":{"products":[[1,10],[2,5]],"reservations":[[1,1,2],[2,1,2]]}},
+    {"id":"empty","label":"Empty inventory","rows":{"products":[],"reservations":[]}}
+  ]
+}

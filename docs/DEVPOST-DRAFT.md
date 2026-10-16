@@ -12,15 +12,17 @@ A SQL query can run without an error and still silently drop customers or double
 
 ## What it does
 
-Three original synthetic incidents cover LEFT JOIN filters, order/item fan-out, and NOT IN with NULL. The current query is executed in SQLite against nine databases per incident. An independent reference computes the expected result. A reducer removes rows while preserving a valid mismatch, producing a smaller example a reviewer can inspect.
+Three original synthetic incidents cover LEFT JOIN filters, order/item fan-out, and NOT IN with NULL. Each supports nine curated databases plus 24 seeded synthetic fixtures. A reusable case-pack format lets developers supply their own schema, contract, independent reference and synthetic data; an inventory example demonstrates this. The repository CLI returns a failing exit code for a mismatch and writes a review without overwriting the SQL file.
+
+An independent reference computes the expected result. A reducer removes rows while preserving a valid mismatch, producing a smaller example a reviewer can inspect. Browser reviews include exact row deltas, proposed SQL diffs, opt-in local drafts and JSON/Markdown exports. Review digests identify content but do not authenticate it.
 
 The implemented agent adapter requests structured SQL and an optional adversarial fixture from NVIDIA Nemotron through Nebius Token Factory. A candidate is tested before it can be applied. A failed candidate can receive execution feedback for one revision. Model-generated explanations are never used as the test oracle.
 
-**Current release gate:** the adapter has passed mocked-transport checks, but actual Nebius inference has not run because sign-in stopped at device verification. Live controls are unavailable without a configured key. The explicitly labeled hand-authored reference workflow is working. This draft must be updated with actual runtime evidence before final submission.
+**Current release gate:** the adapter has passed mocked-transport checks. GitHub sign-in to Nebius succeeded, but billing/provisioning setup blocks key/credit access. No actual inference has run. The explicitly labeled hand-authored reference workflow works locally. This draft must be updated with actual runtime evidence before final submission. Media and final submission are deferred until user review.
 
 ## How we built it
 
-React provides the workbench. sql.js runs SQLite in an isolated browser worker with a timeout, synthetic data, primary/foreign-key validation and row limits. An ESM server validates JSON, keeps the model key server-side, and calls the official Token Factory chat-completions endpoint with nvidia/nvidia-nemotron-3-nano-30b-a3b. The model receives the selected case's schema, contract, candidate SQL and failure evidence; reference SQL and the full curated test suite are excluded from that request.
+React provides the workbench. sql.js runs SQLite in a disposable browser worker or CLI worker thread with a timeout, typed synthetic data, primary/foreign-key validation and output limits. Structured schema compilation rejects raw DDL. An ESM server validates JSON, keeps the model key server-side, and targets the official Token Factory chat-completions endpoint with a cookbook NVIDIA model ID or a configured NVIDIA model override. Catalog availability still needs confirmation. The model receives the selected case's schema, contract, candidate SQL and bounded failure evidence; reference SQL and the full suite are excluded.
 
 The local evaluator is inspired by distilled SQL test suites and mutation-based code evaluation. It compares result multisets, retaining duplicate counts, then reduces a failing database through valid single-row deletions. Neither finite passing tests nor single-row irreducibility proves universal correctness.
 
@@ -30,7 +32,7 @@ One zero-ID fixture initially failed to expose a plausible wrong repair because 
 
 ## Accomplishments
 
-All 29 local engine and mocked-adapter checks pass. Three reference queries pass 27/27 fixture checks in total. Nine intentionally wrong repairs are rejected. Browser QA verifies reference review/apply, invalid-SQL errors, actual SQLite evaluation and JSON export. These are synthetic local results, not a Nemotron benchmark.
+All 48 local engine, CLI, agent-loop and mocked-adapter tests pass. Three reference queries pass 99/99 curated/seeded fixture checks in total; the custom inventory reference passes 4/4. Nine intentionally wrong repairs are rejected. Browser QA verifies custom import, draft restoration across cases, timeout recovery, real SQLite evaluation and a downloaded review whose digest was verified by the CLI. These are local synthetic results, not a Nemotron benchmark.
 
 ## What we learned
 
@@ -42,7 +44,7 @@ Complete a real Nebius call; record its response ID and tested output; provide d
 
 ## Product feedback draft
 
-The documented OpenAI-compatible Token Factory API makes the adapter small, and the official model cookbook provides the exact model identifier. Hands-on inference latency, reliability and cost have not been measured. Onboarding stopped at Google device approval; no false billing country or alternate provider was used. Feedback about actual model/service behavior will be added only after successful calls.
+The documented OpenAI-compatible Token Factory API makes the adapter small, and the official model cookbook provides an initial model identifier. Hands-on inference latency, reliability and cost have not been measured. GitHub authentication succeeds, but the account stops at billing/provisioning before model use. Clearer credit activation and supported-country guidance would help this onboarding path. No false billing country or alternate provider was used. Feedback about model/service behavior will be added only after successful calls.
 
 ## New work and attribution
 

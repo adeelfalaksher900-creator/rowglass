@@ -1,0 +1,15 @@
+export function resultDelta(expected,actual){
+  const count=result=>{const m=new Map();for(const row of result?.[0]?.values||[]){const key=JSON.stringify(row);m.set(key,(m.get(key)||0)+1);}return m;};
+  const a=count(expected),b=count(actual),missing=[],unexpected=[];
+  for(const [key,n]of a)if(n>(b.get(key)||0))missing.push({row:JSON.parse(key),count:n-(b.get(key)||0)});
+  for(const [key,n]of b)if(n>(a.get(key)||0))unexpected.push({row:JSON.parse(key),count:n-(a.get(key)||0)});
+  return {schemaMatches:JSON.stringify(expected?.[0]?.columns||[])===JSON.stringify(actual?.[0]?.columns||[]),missing,unexpected};
+}
+export function unifiedPatch(before,after,file='query.sql'){
+  const safe=/^[a-zA-Z0-9_.\/-]+$/.test(file)&&!file.includes('..')?file:'query.sql';
+  const a=before.trimEnd().split('\n'),b=after.trimEnd().split('\n');
+  return `--- a/${safe}\n+++ b/${safe}\n@@ -1,${a.length} +1,${b.length} @@\n${a.map(s=>'-'+s).join('\n')}\n${b.map(s=>'+'+s).join('\n')}\n`;
+}
+export function reviewMarkdown(record){
+  const r=record.report;return `# Rowglass review: ${record.scenario.title}\n\n${r.passed}/${r.total} checks agree with the supplied reference. This is finite test evidence, not an equivalence proof.\n\n## Contract\n${record.scenario.contract}\n\n## Execution\n${r.results.map(x=>`- ${x.pass?'PASS':x.invalid?'INVALID':'FAIL'}: ${x.label}${x.error?' ('+x.error+')':''}`).join('\n')}\n\n## Reduced mismatch\n${r.witness?JSON.stringify(r.witness.rows,null,2):'No reducible value mismatch.'}\n\n## Model evidence\n${record.modelCalls?.length?record.modelCalls.map(c=>`${c.provenance?.model||'unknown'} / response ${c.provenance?.responseId||'not supplied'} / ${c.passed}/${c.total}`).join('\n'):'No live model calls in this review.'}\n\nThe reference is supplied by the case author. Rowglass does not establish its correctness.\n`;
+}

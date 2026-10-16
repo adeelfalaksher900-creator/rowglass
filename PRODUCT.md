@@ -1,11 +1,15 @@
-# Rowglass
+# Rowglass 0.2
 
-A SQL repair workbench for developers and analytics engineers investigating a query that runs but returns the wrong rows. Primary track: Coding and Agentic Engineering, Nebius x NVIDIA Global AI Hackathon.
+A SQL repair workbench and repository CLI for developers investigating a query that runs but returns the wrong rows. Primary track: Coding and Agentic Engineering, Nebius x NVIDIA Global AI Hackathon.
 
-The first version supports three curated, original SQLite incidents: a LEFT JOIN filter dropping customers, join fan-out inflating totals, and NOT IN interacting with NULL. The independent reference query and synthetic test fixtures belong to the application, not the generating model. Nemotron receives the contract, schema, candidate SQL and bounded execution feedback, but not the reference query or evaluation suite. It proposes a patch and optionally more synthetic data. The browser runs real SQLite. At most two repair calls are made per request, with explicit review before applying a passing proposal. Challenge mode preserves the current SQL and tests a generated fixture.
+The product supports three original SQLite incidents plus validated custom case packs. The cases cover a LEFT JOIN filter dropping customers, join fan-out inflating totals and NOT IN interacting with NULL. Each built-in has nine curated fixtures plus 24 repeatable generated fixtures. A separate inventory example demonstrates the custom format and CLI.
 
-The local reducer deletes rows while retaining a valid mismatch and foreign-key constraints. Its output is single-row irreducible under this procedure, not a globally minimum counterexample. A finite suite is not a semantic-equivalence proof.
+The independent reference and full fixture suite stay local. Nemotron receives the selected contract, schema, candidate SQL and bounded failure feedback. It proposes a repair and optionally a synthetic fixture. The evaluator executes the proposal before it can be applied. At most two repair calls are made per task. Challenge mode preserves the current SQL. A failing candidate cannot be applied with the UI's passing-candidate action.
 
-No real database, cloud data warehouse, file import, user account store, external message or production SQL mutation is supported. All table data is synthetic. Live model calls send selected synthetic schema, SQL and feedback to Nebius. The only persistent backend secret is NEBIUS_API_KEY, configured outside source. The initial Site is owner-private. Public live inference needs a durable quota design and confirmed credits before release.
+The reducer deletes rows while retaining a valid mismatch and foreign-key constraints. Its output is single-row irreducible under this procedure, not globally minimum. A finite suite is not a semantic-equivalence proof. The supplied reference may itself be wrong; Rowglass cannot establish business correctness.
 
-Current integration status: the Nebius HTTP adapter and mocked transport tests exist. A real Nebius response has not been observed. Google sign-in was stopped after the phone/device approval was rejected. Do not claim a qualified runtime, completed hackathon entry, live model results or production deployment from these local tests.
+Browser and CLI reviews contain SQL, synthetic fixtures, results and recorded model metadata. SHA-256 identifies the serialized record but does not authenticate it. The CLI writes a patch without overwriting SQL. The browser supports one explicitly saved local draft; other edits are transient.
+
+No production database connection, user account store or automated external message exists. Selected synthetic data is transmitted only when a model request is made. NEBIUS_API_KEY is configured outside source. No persistent application database is required, and no Supabase resource was created or modified. Public inference fails closed until a durable quota design exists.
+
+GitHub sign-in to Nebius succeeded. Billing/provisioning setup currently blocks API key/credit use, and no actual model response has been observed. The adapter has mocked-transport coverage. Do not claim a qualified runtime, complete hackathon entry, live benchmark or production deployment from the local controls. The owner-private review build preserves its current audience. Media and final submission wait for project review.
