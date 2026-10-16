@@ -15,6 +15,7 @@ export function readOnlySql(sql) {
 }
 export function canonical(result){
   const columns=result[0]?.columns||[];const values=result[0]?.values||[];
+  if(values.some(row=>row.some(value=>typeof value==='number'&&!Number.isFinite(value))))throw new Error('Non-finite output numbers are not supported.');
   return {columns,values:values.map(r=>JSON.stringify(r)).sort()};
 }
 export function equalResults(a,b){const x=canonical(a),y=canonical(b);return JSON.stringify(x)===JSON.stringify(y);}
@@ -32,7 +33,7 @@ export function execute(SQL,scenario,rows,sql){
     const denyAllocation=function(){throw 'Blob allocation and formatting functions are disabled in this review worker.';};
     Object.defineProperty(denyAllocation,'length',{value:-1});
     for(const name of ['zeroblob','randomblob','printf','format'])db.create_function(name,denyAllocation);
-    db.run('PRAGMA foreign_keys=ON');for(const table of scenario.schema)db.run(table.ddl);for(const table of scenario.schema){const stmt=db.prepare(`INSERT INTO "${table.name}" VALUES (${table.columns.map(()=>'?').join(',')})`);try{for(const r of rows[table.name])stmt.run(r);}finally{stmt.free();}}db.run('PRAGMA query_only=ON');const q=db.prepare(sql);try{const columns=q.getColumnNames(),values=[];let resultBytes=0;if(columns.length>32)throw new Error('Use at most 32 output columns.');while(q.step()){if(values.length>=1000)throw new Error('Query returned more than 1,000 rows. Narrow the result.');const row=q.get();if(row.some(v=>v instanceof Uint8Array||(typeof v==='string'&&v.length>10000)))throw new Error('An output value exceeds the supported text size or is binary.');resultBytes+=JSON.stringify(row).length;if(resultBytes>1000000)throw new Error('Query output exceeds the review size limit.');values.push(row);}return [{columns,values}];}finally{q.free();}}finally{db.close();}
+    db.run('PRAGMA foreign_keys=ON');for(const table of scenario.schema)db.run(table.ddl);for(const table of scenario.schema){const stmt=db.prepare(`INSERT INTO "${table.name}" VALUES (${table.columns.map(()=>'?').join(',')})`);try{for(const r of rows[table.name])stmt.run(r);}finally{stmt.free();}}db.run('PRAGMA query_only=ON');const q=db.prepare(sql);try{const columns=q.getColumnNames(),values=[];let resultBytes=0;if(columns.length>32)throw new Error('Use at most 32 output columns.');while(q.step()){if(values.length>=1000)throw new Error('Query returned more than 1,000 rows. Narrow the result.');const row=q.get();if(row.some(v=>typeof v==='number'&&!Number.isFinite(v)))throw new Error('Non-finite output numbers are not supported.');if(row.some(v=>v instanceof Uint8Array||(typeof v==='string'&&v.length>10000)))throw new Error('An output value exceeds the supported text size or is binary.');resultBytes+=JSON.stringify(row).length;if(resultBytes>1000000)throw new Error('Query output exceeds the review size limit.');values.push(row);}return [{columns,values}];}finally{q.free();}}finally{db.close();}
 }
 export function compare(SQL,scenario,fixture,sql){
   try {const expected=execute(SQL,scenario,fixture.rows,scenario.reference);let actual;try{actual=execute(SQL,scenario,fixture.rows,sql);}catch(e){return {...fixture,pass:false,expected,actual:[],error:e.message};}return {...fixture,pass:equalResults(expected,actual),expected,actual};}catch(e){return {...fixture,invalid:true,pass:false,error:e.message};}
