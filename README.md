@@ -30,7 +30,7 @@ Open http://localhost:3000. No production database is connected. All example dat
 2. Inspect the failing output and the reduced one-row database.
 3. Load the explicitly **hand-authored reference repair**, inspect its diff and 9/9 results, then apply it.
 4. Run 24 additional fixtures with seed 2026. The reference passes 33/33 finite checks.
-5. Export a sealed JSON review, Markdown review or SQL patch. The digest detects changed content; it does not authenticate a model response.
+5. Export a sealed JSON review, Markdown review or SQL patch. Copyable review text is available if a browser download is unavailable. The digest detects changed content; it does not authenticate a model response.
 6. Open **Your case**, load the inventory example, confirm it contains synthetic data, and validate it. Its baseline fails 2/4 checks; its reference passes 4/4.
 
 Query text is transient unless you explicitly choose **Save local draft**. Restore and forget controls manage that single browser draft. Model calls require a server-side key and send the selected synthetic schema, contract, SQL and bounded failure evidence to Nebius.

@@ -32,7 +32,7 @@ One zero-ID fixture initially failed to expose a plausible wrong repair because 
 
 ## Accomplishments
 
-All 48 local engine, CLI, agent-loop and mocked-adapter tests pass. Three reference queries pass 99/99 curated/seeded fixture checks in total; the custom inventory reference passes 4/4. Nine intentionally wrong repairs are rejected. Browser QA verifies custom import, draft restoration across cases, timeout recovery, real SQLite evaluation and a downloaded review whose digest was verified by the CLI. These are local synthetic results, not a Nemotron benchmark.
+All 48 local engine, CLI, agent-loop and mocked-adapter tests pass. Three reference queries pass 99/99 curated/seeded fixture checks in total; the custom inventory reference passes 4/4. Nine intentionally wrong repairs are rejected. Browser QA verifies custom import, draft restoration across cases, timeout recovery, real SQLite evaluation and a downloaded JSON review whose digest was verified by the CLI. Follow-up 360/390/768-pixel layout checks exposed and fixed horizontal page overflow. Browser patch/Markdown file completion remains unconfirmed; copyable review text is available. The initial public GitHub CI run also passed. These are local synthetic results, not a Nemotron benchmark.
 
 ## What we learned
 
