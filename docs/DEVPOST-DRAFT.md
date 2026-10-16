@@ -4,6 +4,8 @@
 
 **Track:** Coding and Agentic Engineering.
 
+Saved online at https://devpost.com/software/rowglass as an incomplete submission. The existing Devpost team lists ADEEL FALAK SHER and Raouf Khalid. Team eligibility/residence and personal learning answers must be confirmed before final submission.
+
 ## Inspiration
 
 A SQL query can run without an error and still silently drop customers or double revenue. An attractive explanation from a coding model does not establish that its repair preserves the intended result. Rowglass is a small workbench for developers reviewing those changes: show the failing rows, propose a repair, execute it, and review the evidence.

@@ -9,3 +9,5 @@ Automated checks cover positive reference controls, original-query failures, all
 `npm audit --omit=dev` reports zero vulnerabilities. The static premium audit reports zero findings after contract/header fixes. DESIGN.md lint has zero errors and seven orphan-token warnings; the runtime CSS uses those tokens, but the documentation lists only one component. Neither static audit establishes accessibility or model correctness.
 
 Live Nebius generation remains unverified. Google stopped sign-in after the device request was rejected. The adapter must not be described as a successful runtime integration until a real request and resulting execution evidence are observed. No credential was placed in code, logs, screenshots or the browser bundle.
+
+Published checkpoint: the owner-private Sites deployment succeeded. Public GitHub source is licensed MIT. Devpost shows INCOMPLETE SUBMISSION and the saved story explicitly states the live-inference blocker. No final rules/terms acceptance was performed. The existing two-person Devpost team was preserved, with submitter type set to Team.
