@@ -1,0 +1,8 @@
+node_modules/
+dist/
+worker/source.mjs
+worker/index.js
+.env
+.env.*
+!.env.example
+*.tar.gz
