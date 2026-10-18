@@ -10,6 +10,10 @@ The official [FAQ](https://nebiusglobalaihackathon.devpost.com/details/faqs) say
 
 Once access is resolved, confirm an available NVIDIA open model in the current catalog, configure the key server-side, run the repair workflow using granted credits, and preserve the returned response metadata together with executed SQL results. Do not publish a key or account/billing screenshots.
 
+## Builder Program email check
+
+The welcome email received on 15 October 2026 at 02:52:52 Pakistan time was read. It says the $25 Token Factory credit will arrive in a separate email. A targeted search including spam and trash found no separate activation/credit email at this checkpoint. The welcome message is not proof of granted balance or API access. Its partner offers do not resolve the required Nebius runtime gate.
+
 ## Support message draft — not sent
 
 An unsent Gmail draft is saved for review, addressed to `tokenfactory-support@nebius.com`, with subject **Hackathon access help: Pakistan missing from Token Factory billing**.

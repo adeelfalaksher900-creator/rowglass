@@ -48,7 +48,7 @@ node cli/rowglass.mjs check examples/inventory.case.json \
 node cli/rowglass.mjs verify /tmp/review.json
 ```
 
-`check` writes JSON and Markdown reviews. Exit codes: 0 when all finite checks agree; 1 for a mismatch; 2 for invalid input or setup. [The CI workflow](.github/workflows/check.yml) runs local checks and the custom inventory example. A passing suite is not a universal correctness proof.
+`check` writes JSON and Markdown reviews. Choose a new `--out` prefix for each run. Existing outputs, input-file collisions and existing output aliases are refused before evaluation; exclusive creation prevents overwriting files introduced after that check. Case files are limited to 200,000 characters (800,000 bytes), query files to 48,000 bytes and 12,000 characters, and JSON reviews to 16 MiB. Inputs must be regular files. Exit codes: 0 when all finite checks agree; 1 for a mismatch; 2 for invalid input or setup. [The CI workflow](.github/workflows/check.yml) runs local checks and the custom inventory example. A passing suite is not a universal correctness proof.
 
 ### Bring your own synthetic case
 
@@ -83,7 +83,7 @@ Credentials stay server-side. The private server has a shared, in-memory 12-call
 
 Run `node scripts/evaluate.mjs` to regenerate [the local control report](docs/local-evaluation.json). Result comparison preserves duplicate counts and exact column names, including empty outputs; row order is ignored. A greedy reducer removes rows while preserving a valid value mismatch. The result is single-row irreducible under that procedure, not globally smallest.
 
-SQL runs in a disposable browser worker or Node worker thread with an eight-second timeout. Output is capped at 1,000 rows, 32 columns and one million serialized characters per execution. Blob allocation and formatting functions are disabled. These resource guards are not a formal memory sandbox or security certification.
+SQL runs in a disposable browser worker or Node worker thread with an eight-second timeout. Output is capped at 1,000 rows, 32 columns and one million serialized characters per execution. Blob allocation and formatting functions are disabled. Non-finite numeric results are rejected so Infinity cannot compare equal to NULL in JSON evidence. These resource guards are not a formal memory sandbox or security certification.
 
 ## Review and release materials
 
@@ -98,3 +98,6 @@ The public demo, real Nebius execution evidence, final eligibility answers and p
 ## License
 
 MIT. Bundled libraries and fonts retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md) and [license copies](licenses/). The app also serves bundled notices at `/licenses.txt`.
+
+
+The 17 October 2026 review follow-up adds six regression cases, bringing the completed GitHub Actions checkpoint to 54 passing tests. See [review checkpoint](docs/REVIEW-CHECKPOINT.md) for exact source, remaining gates and the incomplete security-audit status.
