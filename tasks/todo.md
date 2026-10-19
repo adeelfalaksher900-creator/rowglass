@@ -12,7 +12,9 @@
 - [x] T08: Polish three-stage desktop/mobile flow. Files: App, CSS, DESIGN and UX contract. Verify fresh screenshots, keyboard and every primary action.
 - [ ] T09: Resolve Nebius access and collect actual runtime evidence. External gate; verify returned NVIDIA response plus executed candidate.
 - [ ] T10: Verify durable allowance/judge deployment. Dedicated free backend only if approved/needed; verify transactional limits and judge access.
-- [ ] T11: Combined checks, independent review and exact deployment. Update README, validation and Devpost draft truthfully.
+- [x] T11: Combined checks, independent review and exact deployment. Update README, validation and Devpost draft truthfully.
 - [ ] T12: Final-build media, public YouTube and 15 captions. Start only after T09–T11 pass. Final submission requires entrant confirmation.
 
-Checkpoint: 120 tests and production ESM build pass. Six independent review findings fixed and rechecked. T08 core local UI flows were checked in the deployed browser. T11 awaits public source/CI and Devpost update; T09/T10 remain external release gates. Connected-provider UI and final media remain gated.
+Checkpoint: 120 tests and production ESM build pass. Six independent review findings fixed and rechecked. T08 core local UI flows were checked in the deployed browser. T11 is complete: public PR2 merged after remote CI and the Devpost draft save was verified; T09/T10 remain external release gates. Connected-provider UI and final media remain gated.
+
+Public release checkpoint: PR2 merged after CI run 39185149506 passed. Runtime and code are unchanged by this documentation checkpoint. See docs/RELEASE-2026-10-19.md.
