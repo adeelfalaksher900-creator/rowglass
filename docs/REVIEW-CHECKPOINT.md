@@ -36,3 +36,7 @@ The Coding and Agentic Engineering track remains the fit. Final submission still
 ## Resume safely
 
 Fetch public main and PR 1 before changing code, then bring the verified changes into the owner-private source workflow without overwriting its existing state. Rebuild and privately deploy the exact corrected source. Resume the incomplete audit and perform fresh browser checks. Update Devpost from current measured evidence and preserve its draft status until every gate is met. Do not resend the existing support draft without a user instruction to send.
+
+## 19 October follow-up
+
+PR1 was independently re-reviewed and merged at public commit `aebfd9f8674a308df37ecd28b3e9e87205f5136b`. The v0.3 work adds the PRD/TRD, 24-change controls, integer fidelity, reduced regression handoff, complete replay, optional documentation search and refreshed review stages. Six independently reproduced integration defects were corrected and rechecked; current local checks pass 118 tests plus the production ESM build. See VALIDATION.md for current evidence. This implementation review does not complete the earlier formal security audit or establish actual provider usage.

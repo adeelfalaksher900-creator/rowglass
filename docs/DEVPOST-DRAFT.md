@@ -1,51 +1,79 @@
 # Rowglass
 
-**Tagline:** SQL repairs with executable counterexamples.
+**Tagline:** Review SQL changes with executable counterexamples.
 
 **Track:** Coding and Agentic Engineering.
 
-Saved online at https://devpost.com/software/rowglass as an incomplete submission. The existing Devpost team lists ADEEL FALAK SHER and Raouf Khalid. Team eligibility/residence and personal learning answers must be confirmed before final submission.
+Saved and verified in the Devpost project details on 19 October 2026 Pakistan time. The story below matches the saved editor text. The entry remains a draft. Team/eligibility answers, actual Nebius runtime, judge access and final media remain release gates.
 
 ## Inspiration
 
-A SQL query can run without an error and still silently drop customers or double revenue. An attractive explanation from a coding model does not establish that its repair preserves the intended result. Rowglass is a small workbench for developers reviewing those changes: show the failing rows, propose a repair, execute it, and review the evidence.
+A behavior-preserving SQL refactor can run without errors and still drop customers or inflate revenue. A coding model's explanation is not enough to approve that change. Rowglass helps a developer reproduce the disagreement, inspect the few rows which expose it, test a repair and carry the regression into a repository.
+
+This workflow starts with a developer-owned trusted baseline. It is useful when preserving behavior. If the business rule intentionally changes, the old query is insufficient: the reviewer needs new expectations. Rowglass does not discover business intent or certify its reference automatically.
 
 ## What it does
 
-Three original synthetic incidents cover LEFT JOIN filters, order/item fan-out, and NOT IN with NULL. Each supports nine curated databases plus 24 seeded synthetic fixtures. A reusable case-pack format lets developers supply their own schema, contract, independent reference and synthetic data; an inventory example demonstrates this. The repository CLI returns a failing exit code for a mismatch and writes a review without overwriting the SQL file.
+The review flow has three stages: reproduce, inspect and review. Three synthetic incidents cover outer-join filtering, join fanout and NULL-sensitive exclusion. Each has nine curated fixtures plus 24 seeded stress fixtures. Developers can also import a strict typed case pack containing their own contract, proposed SQL, trusted reference and synthetic rows.
 
-An independent reference computes the expected result. A reducer removes rows while preserving a valid mismatch, producing a smaller example a reviewer can inspect. Browser reviews include exact row deltas, proposed SQL diffs, opt-in local drafts and JSON/Markdown exports. Review digests identify content but do not authenticate it.
+SQLite executes both queries independently and compares exact result columns and duplicate-sensitive row multisets. A constraint-aware reducer finds a smaller distinguishing database. The reviewer can export that reduced case, rerun it with the CLI and retain it as a regression test. The artifact contains synthetic data and the supplied reference, with no database connection needed.
 
-The implemented agent adapter requests structured SQL and an optional adversarial fixture from NVIDIA Nemotron through Nebius Token Factory. A candidate is tested before it can be applied. A failed candidate can receive execution feedback for one revision. Model-generated explanations are never used as the test oracle.
+Version 0.3 JSON reviews include their case and execution suite. CLI `replay` independently recomputes original and optional candidate outcomes offline, without a provider call. Digest-only `verify` remains separate: a matching hash does not establish that results are reproducible or that a model call happened.
 
-**Current release gate:** the adapter has passed mocked-transport checks. GitHub sign-in to Nebius succeeded, but billing/provisioning setup blocks key/credit access. No actual inference has run. The explicitly labeled hand-authored reference workflow works locally. This draft must be updated with actual runtime evidence before final submission. Media and final submission are deferred until user review.
+The agent path requests structured repair proposals from NVIDIA Nemotron through Nebius Token Factory. Each proposal is executed before approval. A failed proposal receives bounded visible execution feedback for at most one revision. The reference query and full suite are excluded from model context. Hand-authored demonstration repairs remain explicitly labeled.
+
+An optional Tavily integration retrieves official SQLite explanations for four fixed semantic topics. Only a generic topic enters search, without uploaded SQL, identifiers or row values. Citations explain semantics; they never establish expected results or grade a repair.
+
+**Current release gate:** actual NVIDIA-on-Nebius inference has not run. GitHub sign-in succeeds, but Nebius billing/provisioning blocks key and credit access. The model adapter and Tavily lookup have mocked-transport checks; Tavily has no verified key or runtime call. The checked v0.3 review preview is deployed owner-private. This draft is not ready for final submission. Final video, narration and the 15-image gallery follow the final tested product and real runtime evidence.
 
 ## How we built it
 
-React provides the workbench. sql.js runs SQLite in a disposable browser worker or CLI worker thread with a timeout, typed synthetic data, primary/foreign-key validation and output limits. Structured schema compilation rejects raw DDL. An ESM server validates JSON, keeps the model key server-side, and targets the official Token Factory chat-completions endpoint with a cookbook NVIDIA model ID or a configured NVIDIA model override. Catalog availability still needs confirmation. The model receives the selected case's schema, contract, candidate SQL and bounded failure evidence; reference SQL and the full suite are excluded.
+React provides the review workbench. sql.js runs SQLite inside disposable browser and Node workers. Typed schema compilation rejects raw DDL, inserts bound values and checks primary/foreign-key constraints. The CLI preserves input SQL and writes reviewable artifacts instead of editing or merging a repository automatically.
 
-The local evaluator is inspired by distilled SQL test suites and mutation-based code evaluation. It compares result multisets, retaining duplicate counts, then reduces a failing database through valid single-row deletions. Neither finite passing tests nor single-row irreducibility proves universal correctness.
+The ESM server keeps credentials server-side, validates requests and replies, and fixes the inference destination to the official Token Factory chat-completions API. The configured default model is `nvidia/nvidia-nemotron-3-nano-30b-a3b` from the official cookbook; current account/catalog availability remains unverified. Connection status distinguishes configured credentials from an observed successful response. Provider metadata is not signed attestation.
+
+SQLite INTEGER outputs are read as BigInt before conversion. Only values inside JavaScript's exact safe-integer range are accepted; larger integers are rejected rather than rounded. Finite REAL results retain exact number comparison. Execution has time/output bounds, but these guards do not constitute a full WebAssembly memory sandbox.
+
+The design draws on established SQL test-suite evaluation, small distinguishing databases, execution-guided repair and fixture-based regression testing. Rowglass's product hypothesis is low-setup browser investigation plus a portable browser-to-CLI handoff. We do not claim to invent those methods.
+
+## Evaluation
+
+The frozen corpus contains 24 hand-authored synthetic proposed changes across six schemas. Eighteen are deliberately wrong mutations; six are equivalent rewrites. Each schema has two repair-visible fixtures and two held-out fixtures, with hand-calculated expected results. Offline validation performs 24 independent reference checks and 96 candidate fixture checks, exposing the wrong changes while preserving the valid rewrites.
+
+A separate harness supports one-shot and at-most-two-round execution-feedback proposals. It scores held-out fixtures only after repair stops and records mis-repairs, false acceptance, errors, call limits and supplied final-proposal metadata. Generated challenge fixtures do not enlarge the frozen denominator. Injected-proposal checks establish protocol behavior, not model quality. No live provider comparison has run. The public held-out split protects the prompt boundary within a run, not a secret external benchmark.
+
+The three original reference queries separately pass 99/99 curated/seeded checks, the inventory reference passes 4/4 and nine wrong repair controls are rejected. These are finite synthetic controls of the evaluator, not Nemotron accuracy results or proof of universal SQL equivalence.
 
 ## Challenges
 
-One zero-ID fixture initially failed to expose a plausible wrong repair because that subscriber was also suppressed. Correcting the fixture made the mutant fail. This was a useful reminder that the checker itself needs positive and negative controls. Credential onboarding remains an unresolved integration blocker.
+A fixture initially concealed the very wrong repair it was intended to expose. Adding negative controls made that weakness visible. Later source review identified large-integer rounding as another evidence-fidelity risk; version 0.3 now rejects unsupported integers explicitly.
+
+Review handoff also needs more than a hash. A digest can match after someone rewrites the entire record, so offline replay validates and executes the recorded case instead of treating content identity as correctness. Nebius provisioning remains the unresolved external integration blocker.
 
 ## Accomplishments
 
-All 48 local engine, CLI, agent-loop and mocked-adapter tests pass. Three reference queries pass 99/99 curated/seeded fixture checks in total; the custom inventory reference passes 4/4. Nine intentionally wrong repairs are rejected. Browser QA verifies custom import, draft restoration across cases, timeout recovery, real SQLite evaluation and a downloaded JSON review whose digest was verified by the CLI. Follow-up 360/390/768-pixel layout checks exposed and fixed horizontal page overflow. Browser patch/Markdown file completion remains unconfirmed; copyable review text is available. The initial public GitHub CI run also passed. These are local synthetic results, not a Nemotron benchmark.
+The implementation connects browser investigation, exact finite SQLite checks, inspectable row differences, constrained witness reduction, proposed SQL diffs, reduced-case export and independent repository replay. Inputs remain intact. Local checking works without an account. Optional local drafts and copyable artifact text support review without requiring shared storage.
+
+The frozen controls check both wrong changes and valid rewrites, and keep live-model claims separate. PR1's earlier review fixes are merged. The current build passes 120 automated checks and the production build. Fresh browser checks cover imports, local case/reference flows, seeded fixtures, reduced-case reproduction, copied review replay, keyboard navigation and responsive layouts at 390px, 768px and desktop. Browser download automation did not confirm file completion; copyable artifacts were independently executed. Connected-provider UI checks and the comprehensive security audit remain incomplete.
 
 ## What we learned
 
-Separating the model from the oracle makes a repair easier to examine. Small, inspectable counterexamples explain a disagreement more concretely than a confidence score. A test fixture can also hide the very bug it is intended to detect.
+A baseline is useful only when its intended role is clear. Preserving an existing query and defining a new business rule are different tasks. A small counterexample is easier to investigate than a confidence score, and the evaluator needs independent checks of its own. Reproducible evidence is stronger than a plausible explanation, but finite examples still have limits.
 
 ## What's next
 
-Complete a real Nebius call; record its response ID and tested output; provide durable public inference limits and unrestricted judge access; then record the final English demonstration. Expand dialects and tasks only after validating each reference and fixture set.
+Complete approved Nebius access, confirm model availability and run the frozen one-shot/feedback comparison under granted credits. Publish actual outcomes and failures. The checked v0.3 preview is deployed owner-private. Complete connected-provider UI/security verification and provide free judge access through December 15. Then record the final English YouTube demonstration under three minutes and create the accurate captioned gallery.
+
+Serverless Jobs could support repeatable batch evaluation if approved AI Cloud access/credits become available. No deployment or grant is assumed. A dedicated persistent backend is justified only if shared reviews or durable authenticated inference allowances are needed; none is claimed today.
 
 ## Product feedback draft
 
-The documented OpenAI-compatible Token Factory API makes the adapter small, and the official model cookbook provides an initial model identifier. Hands-on inference latency, reliability and cost have not been measured. GitHub authentication succeeds, but the account stops at billing/provisioning before model use. Clearer credit activation and supported-country guidance would help this onboarding path. No false billing country or alternate provider was used. Feedback about model/service behavior will be added only after successful calls.
+Token Factory's documented API and official model cookbook make a small adapter feasible. This is a documentation and implementation observation, not a measured inference result. GitHub authentication succeeds, but the account stops at billing/provisioning; Pakistan was absent from the displayed residence list. Clear country-support and credit-activation guidance would improve this path. No false residence or alternate-provider workaround was used.
+
+Actual model quality, latency, reliability and cost remain unmeasured. We will add specific observations after successful runtime use. Tavily's fixed-topic, domain-restricted documentation lookup is implemented and mock-tested, but actual service behavior and award eligibility remain unverified. No Nebius Serverless usage is claimed.
 
 ## New work and attribution
 
-Rowglass was created on 16 October 2026 during this submission period. Its three cases, fixtures, UI and integration code are new work. AI assistance was used for research, implementation and test preparation; see AI-DISCLOSURE.md. Libraries and fonts retain their licenses. No city attendance, Tavily integration, real-user outcome study or production-database safety claim is made.
+Rowglass was created on 16 October 2026 during this submission period. Version 0.3 adds reduced regression handoff, independently replayable evidence, integer fidelity, a frozen 24-change corpus and evaluation harness, and optional semantic-source lookup. AI assistance supported research, implementation and test preparation; see [AI disclosure](https://github.com/adeelfalaksher900-creator/rowglass/blob/main/docs/AI-DISCLOSURE.md). Libraries/fonts retain their licenses. Research and alternatives are acknowledged in [research and alternatives](https://github.com/adeelfalaksher900-creator/rowglass/blob/main/docs/RESEARCH-2026-10-19.md).
+
+No city attendance, verified Tavily bonus eligibility, live model accuracy, intended-user study, production adoption or winning probability is claimed.
