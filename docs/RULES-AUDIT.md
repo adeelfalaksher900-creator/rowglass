@@ -29,3 +29,8 @@ The FAQ explicitly identifies unsupported billing countries as a provisioning ga
 Prize stacking is limited: the organizer's prize update clarifies one overall award, or one track award plus one bonus award. Adding optional services does not automatically earn additional scores or awards. The only claimed integration is the implemented, accurately labeled behavior.
 
 Remaining gates: real runtime and returned evidence, final version deployment, current complete UI/security checks, working free judge access through December 15, accurate public source/instructions/feedback, factual entrant answers and final media. Final submission remains unready until those gates are met.
+
+
+## 19 October v0.4 update
+
+The current official FAQ explicitly rejects OpenRouter as a replacement for Nebius runtime. GitHub login to AI Cloud works, but its billing setup requires $25 and does not list Pakistan. No paid or false-residence workaround was used. A public local-only review build is published with provider routes disabled regardless of runtime environment keys. Actual NVIDIA-on-Nebius execution, a verified durable allowance gate for any live judge inference, factual entrant answers and final media remain open. Public local access is not described as live AI completion.

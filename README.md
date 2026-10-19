@@ -10,13 +10,13 @@ Built for the **Coding and Agentic Engineering** track of the Nebius x NVIDIA Gl
 
 ## Status
 
-Version 0.3 source adds reduced regression-case handoff, independent offline review replay, faithful supported-integer handling, a frozen 24-change control corpus, one-shot versus execution-feedback evaluation controls and optional cited SQLite documentation search. Local checking needs no account or production database. See [PRD](PRD.md), [TRD](TRD.md) and [evaluation protocol](benchmark/README.md).
+Version 0.4 source adds a redesigned syntax-colored review workbench and fail-closed public provider routes, alongside reduced regression-case handoff, independent offline review replay, faithful supported-integer handling, a frozen 24-change control corpus, one-shot versus execution-feedback evaluation controls and optional cited SQLite documentation search. Local checking needs no account or production database. See [PRD](PRD.md), [TRD](TRD.md) and [evaluation protocol](benchmark/README.md).
 
 **Actual Nebius inference remains unverified.** GitHub sign-in succeeded, but billing/provisioning blocks model-key and credit access. The HTTP adapter and Tavily search have mocked-transport coverage. No Tavily key or actual runtime search has been verified. These tests and the explicitly labeled hand-authored reference repairs are not live service results or bonus eligibility evidence.
 
-The checked v0.3 review build is deployed in the owner-private preview. It does not yet provide unrestricted judge access. This is a review build, not a complete hackathon submission.
+Public local review: [Open Rowglass](https://rowglass.adeelfalaksher900.chatgpt.site). No account or provider key is required for SQLite checks, reference review, imports, evaluation and exports. Public provider calls are disabled. This is not a complete hackathon submission; real NVIDIA-on-Nebius execution remains a release gate.
 
-Core validation: **120 tests pass** plus the production build. Fresh browser observations and limits are recorded in [VALIDATION.md](docs/VALIDATION.md).
+Core validation: **144 tests pass** plus the production build. Fresh browser observations and limits are recorded in [VALIDATION.md](docs/VALIDATION.md).
 
 ## Run locally
 
@@ -37,7 +37,7 @@ Open http://localhost:3000. All example data is synthetic.
 3. Choose **Prepare regression case**. Rowglass validates and reruns the reduced case before offering its JSON download and copyable JSON. This artifact contains the failing proposal, trusted reference and reduced synthetic rows.
 4. Load the explicitly **hand-authored reference repair**, inspect its diff and 9/9 results, then apply it. This demonstrates review mechanics, not model inference.
 5. Run the 24 additional fixtures with seed 2026. The reference passes 33/33 finite checks.
-6. Export JSON or Markdown evidence and, when present, the proposed SQL patch. New version 0.3 JSON reviews include the execution suite for independent CLI replay. Copyable review text is available when a browser download is unavailable.
+6. Export JSON or Markdown evidence and, when present, the proposed SQL patch. Version 0.3 and later JSON reviews include the execution suite for independent CLI replay. Copyable review text is available when a browser download is unavailable.
 7. Open **Your case**, load the inventory example, confirm synthetic data and validate it. Its proposed query fails 2/4 checks; its reference passes 4/4.
 
 Query text is transient unless you choose **Save local draft**. Restore and forget controls manage one browser draft. A model request sends the selected synthetic schema, contract, proposed SQL and bounded failure evidence to Nebius. A documentation request sends only a fixed generic SQL topic to Tavily, without case SQL, identifiers or rows.
@@ -79,7 +79,7 @@ Limits: 6 tables, 16 columns per table, 30 fixtures and 100 input rows per fixtu
 
 ## NVIDIA Nemotron on Nebius
 
-Configure `NEBIUS_API_KEY` outside source as a server environment variable, then start the app or run:
+For a trusted loopback Node server or CLI, configure `NEBIUS_API_KEY` outside source, explicitly set `ROWGLASS_PROVIDER_MODE=private` and `ROWGLASS_PUBLIC=false`, then start the app or run:
 
 ```sh
 node cli/rowglass.mjs repair examples/inventory.case.json \
@@ -90,11 +90,11 @@ node cli/rowglass.mjs repair examples/inventory.case.json \
 
 The fixed endpoint is `https://api.tokenfactory.nebius.com/v1/chat/completions`. The default NVIDIA model ID is `nvidia/nvidia-nemotron-3-nano-30b-a3b`, taken from the official cookbook. Confirm actual catalog availability before a live run; `NEBIUS_MODEL` accepts a `nvidia/...` override. A configured key is distinct from an observed successful response. Provider response IDs and returned usage are metadata, not signed attestations. No live accuracy, latency or granted-credit claim is established.
 
-Credentials stay server-side. The private server has a shared in-memory 12-call hourly inference cap; this is not durable authorization or a quota ledger. `ROWGLASS_PUBLIC=true` disables live inference and documentation search even when keys exist. Retain this guard until authenticated access, durable allowances and concurrency controls are independently verified. The project provisions no GPU or Supabase database. Supabase would support persistent allowances or shared records if needed; it would not replace required Nebius runtime.
+Missing or unknown provider mode disables all keyed requests. The generated public Worker unconditionally overrides the mode to local-only, regardless of runtime keys or flags. To offer live inference publicly, a separately reviewed deployment with verified identity and durable limits is required. Credentials stay server-side. The private server has a shared in-memory 12-call hourly inference cap; this is not durable authorization or a quota ledger. `ROWGLASS_PUBLIC=true` disables live inference and documentation search even when keys exist. Retain this guard until authenticated access, durable allowances and concurrency controls are independently verified. The project provisions no GPU or Supabase database. Supabase would support persistent allowances or shared records if needed; it would not replace required Nebius runtime.
 
 ### Optional official-document search
 
-Set `TAVILY_API_KEY` server-side to enable **Search official docs** on a private configured server. Four fixed topics cover outer joins, NULL/NOT IN, aggregate duplicates and integer division. The adapter makes a bounded basic Tavily search restricted to official SQLite domains and validates returned HTTPS links. Results are rendered as text citations. Unconfigured searches return an unavailable state without a provider call. Sources explain semantics; they never grade results or alter the trusted reference. Actual Tavily runtime and bonus eligibility remain unverified.
+Set `TAVILY_API_KEY` server-side together with the explicit private mode above to enable **Search official docs** on a private configured server. Four fixed topics cover outer joins, NULL/NOT IN, aggregate duplicates and integer division. The adapter makes a bounded basic Tavily search restricted to official SQLite domains and validates returned HTTPS links. Results are rendered as text citations. Unconfigured searches return an unavailable state without a provider call. Sources explain semantics; they never grade results or alter the trusted reference. Actual Tavily runtime and bonus eligibility remain unverified.
 
 ## What the evidence means
 
@@ -128,8 +128,13 @@ A greedy reducer removes rows while preserving constraints and a value mismatch.
 
 SQL testing, execution-guided repair and small distinguishing databases have substantial prior art. Rowglass's product hypothesis is low-setup browser investigation plus a portable repository handoff. It does not claim to invent these techniques.
 
-Real NVIDIA-on-Nebius runtime, the checked deployment, current complete UI/security verification, free judge access, factual eligibility answers and final public English YouTube media remain release gates. Video, narration and the 15-image gallery follow the final tested product. No adoption, time-saving study, per-track participation counts or winning odds are invented.
+Real NVIDIA-on-Nebius runtime, any live judge inference and its durable allowance gate, completion of the separately requested formal security audit, factual eligibility answers and final public English YouTube media remain release gates. Anonymous local judge review is published; its exact browser checks and limits are recorded in VALIDATION.md. Video, narration and the 15-image gallery follow the final tested product. No adoption, time-saving study, per-track participation counts or winning odds are invented.
 
 ## License
 
 MIT. Bundled libraries and fonts retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md) and [license copies](licenses/). The app also serves bundled notices at `/licenses.txt`.
+
+
+## Current platform access
+
+GitHub login to Nebius AI Cloud succeeded on 19 October 2026. Its billing page requires a $25 card top-up; Pakistan was not available in the displayed residence list. No card or agreement was submitted. The official hackathon FAQ explicitly excludes OpenRouter as a substitute for a direct Nebius runtime, even though NVIDIA models exist there. See [the current access record](docs/ACCESS-BLOCKER.md) and [official FAQ](https://nebiusglobalaihackathon.devpost.com/details/faqs). No unapproved provider fallback is built into this submission.

@@ -2,6 +2,7 @@ import http from 'node:http';
 import worker from '../dist/server/index.js';
 import {reviewFrame} from './review-frame.mjs';
 import {localRequestUrl} from './local-policy.mjs';
+import {localDispatch} from './local-dispatch.mjs';
 
 const port=Number(process.argv[2]||3000),host=process.argv[3]||'127.0.0.1';
 const reviewFrames=process.argv.includes('--review-frames');
@@ -26,11 +27,11 @@ http.createServer(async(req,res)=>{
     const headers=new Headers();
     for(const [key,value] of Object.entries(req.headers))if(value)headers.set(key,Array.isArray(value)?value.join(','):value);
     const request=new Request(url,{method:req.method,headers,signal:controller.signal,...(!['GET','HEAD'].includes(req.method)?{body:Buffer.concat(chunks)}:{})});
-    const response=await worker.fetch(request,process.env,{});
+    const response=await localDispatch(request,process.env,worker,{host,reviewFrames});
     if(controller.signal.aborted)return;
     const body=Buffer.from(await response.arrayBuffer());
     if(controller.signal.aborted)return;
-    res.writeHead(response.status,Object.fromEntries(response.headers));res.end(body);
+    res.writeHead(response.status,{'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer',...Object.fromEntries(response.headers)});res.end(body);
   }catch{
     if(controller.signal.aborted||res.destroyed)return;
     if(!res.headersSent)res.writeHead(500);

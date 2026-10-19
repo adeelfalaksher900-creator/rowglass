@@ -1,3 +1,24 @@
+# Current validation — v0.4
+
+19 October 2026. The following checkpoint supersedes the historical notes below.
+
+- `npm run check`: **144 tests pass**, production ESM builds, and built-artifact validation passes. The public Worker rejected both keyed provider paths across 16 environment combinations with zero outbound calls.
+- Bounded implementation review fixed stale reference/reset results, execution-record compatibility, public/provider separation, network-facing preview inheritance, accurate privacy copy, stream bounds, editor scrolling and post-validation input focus.
+- Public local demo: https://rowglass.adeelfalaksher900.chatgpt.site. Anonymous standard HTTPS requests without cookies/authorization returned 200 for `/` and `/api/status`; keys were absent and access was local-only. Evidence: `docs/qa/v0.4-public-access.json`.
+- Actual browser workflow: built-in originals 3/9, 5/9 and 7/9; reference proposals 9/9, apply and seed-2026 stress 33/33; imported inventory 2/4 and reference 4/4; cross-case local draft restore; forget/empty-restore recovery; invalid JSON; rejected DELETE input; keyboard Tab to Run tests; associated invalid-input focus; direct official-document links with live search disabled.
+- The actual browser-exported review replays through the CLI, reproducing original 3/9 plus reference 9/9. Its separately exported reduced regression returns the expected mismatch exit code 1 with 0/1 agreement. Files are committed under `docs/qa/`. Browser file-download completion is still unconfirmed; the exact copyable artifacts were independently executed.
+- Browser evaluation executes 18/18 wrong-change rejections, 6/6 valid-rewrite preservations, 24/24 independent reference checks and 96 candidate fixture checks. The model study remains explicitly unrun.
+- Same-state before/after captures are saved for the 1440px and 390px review viewports; a current full-page capture also covers a 1280px short laptop viewport. Intermediate 768px and 1728px DOM/layout checks showed no document overflow. These are browser views, not real-device/Safari coverage. Later recovery and scroll fixes were checked in the 390px view.
+- Self-hosted font checks confirmed IBM Plex body/code and Sora headings loaded; query presentation preserved text. A long query scrolled both axes with matching paint/gutter positions within 1 CSS pixel at the bottom.
+- Premium static audit: zero findings. DESIGN.md lint: zero errors, one unused-border-token warning from the limited component token schema. Better Design's broad copy heuristic flags dense multi-panel tools; the scoped query panel passes. Its geometry leads were triaged: internal code scrolling, sr-only labels, automatic shell spacers and a platform toolbar account for false positives. Real small navigation/link hit areas were enlarged to 44px. No clean automated whole-screen design/accessibility receipt is claimed.
+- Targeted secret-pattern and CI-source reviews are bounded evidence. The separate formal security audit remains incomplete; see `docs/SECURITY-REVIEW-2026-10-19.md`.
+
+Mandatory real NVIDIA-on-Nebius runtime, live inference allowances if offered to judges, factual eligibility confirmation and final video/gallery remain release gates.
+
+---
+
+## Historical validation notes
+
 # Current validation: v0.3
 
 19 October 2026 Pakistan time. `npm run check` passed **120/120 tests**, built the production Worker ESM and validated its `default.fetch` entrypoint. This run followed the combined implementation and independent review corrections. No model provider or search service was contacted by these tests.

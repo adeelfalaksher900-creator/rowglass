@@ -4,7 +4,7 @@
 
 **Track:** Coding and Agentic Engineering.
 
-Saved and verified in the Devpost project details on 19 October 2026 Pakistan time. The story below matches the saved editor text. The entry remains a draft. Team/eligibility answers, actual Nebius runtime, judge access and final media remain release gates.
+Release v0.4 story, 19 October 2026 Pakistan time. The entry remains a draft. Anonymous local review is public; actual NVIDIA-on-Nebius runtime, any live judge inference allowance, factual team/eligibility answers, the separate formal security audit and final media remain release gates.
 
 ## Inspiration
 
@@ -18,19 +18,25 @@ The review flow has three stages: reproduce, inspect and review. Three synthetic
 
 SQLite executes both queries independently and compares exact result columns and duplicate-sensitive row multisets. A constraint-aware reducer finds a smaller distinguishing database. The reviewer can export that reduced case, rerun it with the CLI and retain it as a regression test. The artifact contains synthetic data and the supplied reference, with no database connection needed.
 
-Version 0.3 JSON reviews include their case and execution suite. CLI `replay` independently recomputes original and optional candidate outcomes offline, without a provider call. Digest-only `verify` remains separate: a matching hash does not establish that results are reproducible or that a model call happened.
+The v0.4 workbench produces compatible version 0.3 JSON execution records containing their case and suite. CLI `replay` independently recomputes original and optional candidate outcomes offline, without a provider call. Digest-only `verify` remains separate: a matching hash does not establish that results are reproducible or that a model call happened.
 
 The agent path requests structured repair proposals from NVIDIA Nemotron through Nebius Token Factory. Each proposal is executed before approval. A failed proposal receives bounded visible execution feedback for at most one revision. The reference query and full suite are excluded from model context. Hand-authored demonstration repairs remain explicitly labeled.
 
 An optional Tavily integration retrieves official SQLite explanations for four fixed semantic topics. Only a generic topic enters search, without uploaded SQL, identifiers or row values. Citations explain semantics; they never establish expected results or grade a repair.
 
-**Current release gate:** actual NVIDIA-on-Nebius inference has not run. GitHub sign-in succeeds, but Nebius billing/provisioning blocks key and credit access. The model adapter and Tavily lookup have mocked-transport checks; Tavily has no verified key or runtime call. The checked v0.3 review preview is deployed owner-private. This draft is not ready for final submission. Final video, narration and the 15-image gallery follow the final tested product and real runtime evidence.
+**Public local demo:** [Open Rowglass](https://rowglass.adeelfalaksher900.chatgpt.site). No account or API key is needed for local SQLite review, examples, custom imports, reference comparisons and evaluation. Provider calls are disabled in this public deployment. Anonymous HTTPS access was checked without cookies or authorization.
+
+**Current release gate:** actual NVIDIA-on-Nebius inference has not run. GitHub sign-in succeeds for Token Factory and AI Cloud, but billing/provisioning blocks free key and credit access. The AI Cloud page requires a $25 billing payment and does not list Pakistan in its residence filter. The official hackathon FAQ disallows OpenRouter as a substitute. The model adapter and optional Tavily lookup have injected-transport checks only. This draft is not ready for final submission. Final video, narration and the captioned gallery follow the tested final product and real runtime evidence.
 
 ## How we built it
 
 React provides the review workbench. sql.js runs SQLite inside disposable browser and Node workers. Typed schema compilation rejects raw DDL, inserts bound values and checks primary/foreign-key constraints. The CLI preserves input SQL and writes reviewable artifacts instead of editing or merging a repository automatically.
 
+The redesigned workbench pairs an indigo navigation shell and dark syntax editor with a light result inspector and warm counterexample panel. The disagreement and proposed SQL come first; contract and draft controls open on demand. Self-hosted IBM Plex and Sora fonts, licensed Lucide icons, visible keyboard focus and responsive layouts support a coherent developer tool. Syntax paint uses escaped text and follows the native editor's horizontal and vertical scrolling.
+
 The ESM server keeps credentials server-side, validates requests and replies, and fixes the inference destination to the official Token Factory chat-completions API. The configured default model is `nvidia/nvidia-nemotron-3-nano-30b-a3b` from the official cookbook; current account/catalog availability remains unverified. Connection status distinguishes configured credentials from an observed successful response. Provider metadata is not signed attestation.
+
+The generated public Worker forces local-only mode even if runtime keys or flags are added accidentally. Keyed CLI and loopback-server calls require explicit private opt-in. Model transport rejects redirects, bounds response bytes and applies a deadline across headers and body. These controls do not provide durable public inference authorization; that requires verified identity and an atomic persistent allowance before a live judge deployment.
 
 SQLite INTEGER outputs are read as BigInt before conversion. Only values inside JavaScript's exact safe-integer range are accepted; larger integers are rejected rather than rounded. Finite REAL results retain exact number comparison. Execution has time/output bounds, but these guards do not constitute a full WebAssembly memory sandbox.
 
@@ -54,7 +60,7 @@ Review handoff also needs more than a hash. A digest can match after someone rew
 
 The implementation connects browser investigation, exact finite SQLite checks, inspectable row differences, constrained witness reduction, proposed SQL diffs, reduced-case export and independent repository replay. Inputs remain intact. Local checking works without an account. Optional local drafts and copyable artifact text support review without requiring shared storage.
 
-The frozen controls check both wrong changes and valid rewrites, and keep live-model claims separate. PR1's earlier review fixes are merged. The current build passes 120 automated checks and the production build. Fresh browser checks cover imports, local case/reference flows, seeded fixtures, reduced-case reproduction, copied review replay, keyboard navigation and responsive layouts at 390px, 768px and desktop. Browser download automation did not confirm file completion; copyable artifacts were independently executed. Connected-provider UI checks and the comprehensive security audit remain incomplete.
+The frozen controls check both wrong changes and valid rewrites, and keep live-model claims separate. The current build passes 144 automated tests and production artifact validation. The built public Worker was checked across 16 configuration combinations with zero outbound provider calls. Browser checks cover imports, all three examples, reference approval, seeded fixtures, local draft recovery, rejected inputs, keyboard focus and responsive layouts at 390px, 768px and desktop. An actual browser-exported record replays the original 3/9 and reference 9/9 outcomes independently through the CLI; its reduced regression reproduces the expected 0/1 mismatch. Browser file-download completion remains unconfirmed; the exact copyable artifacts were executed. Connected-provider UI checks and the separate formal security audit remain incomplete.
 
 ## What we learned
 
@@ -62,18 +68,18 @@ A baseline is useful only when its intended role is clear. Preserving an existin
 
 ## What's next
 
-Complete approved Nebius access, confirm model availability and run the frozen one-shot/feedback comparison under granted credits. Publish actual outcomes and failures. The checked v0.3 preview is deployed owner-private. Complete connected-provider UI/security verification and provide free judge access through December 15. Then record the final English YouTube demonstration under three minutes and create the accurate captioned gallery.
+Complete approved Nebius access, confirm model availability and run the frozen one-shot/feedback comparison under granted credits. Publish actual outcomes and failures. Local anonymous access is already public. Complete connected-provider UI/security verification and, if live inference is offered to judges, add verified identity and durable allowances. Maintain free usable judge access through December 15. Then record the final English YouTube demonstration under three minutes and create the accurate captioned gallery.
 
 Serverless Jobs could support repeatable batch evaluation if approved AI Cloud access/credits become available. No deployment or grant is assumed. A dedicated persistent backend is justified only if shared reviews or durable authenticated inference allowances are needed; none is claimed today.
 
 ## Product feedback draft
 
-Token Factory's documented API and official model cookbook make a small adapter feasible. This is a documentation and implementation observation, not a measured inference result. GitHub authentication succeeds, but the account stops at billing/provisioning; Pakistan was absent from the displayed residence list. Clear country-support and credit-activation guidance would improve this path. No false residence or alternate-provider workaround was used.
+Token Factory's documented API and official model cookbook make a small adapter feasible. This is a documentation and implementation observation, not a measured inference result. GitHub authentication succeeds for Token Factory and AI Cloud, but the account stops at billing/provisioning. Pakistan was absent from the displayed residence lists; AI Cloud asks for a $25 billing payment. Clear country-support and credit-activation guidance would improve this path. The FAQ explicitly rules out OpenRouter as a replacement. No false residence, payment, paid resource or alternate-provider workaround was used.
 
 Actual model quality, latency, reliability and cost remain unmeasured. We will add specific observations after successful runtime use. Tavily's fixed-topic, domain-restricted documentation lookup is implemented and mock-tested, but actual service behavior and award eligibility remain unverified. No Nebius Serverless usage is claimed.
 
 ## New work and attribution
 
-Rowglass was created on 16 October 2026 during this submission period. Version 0.3 adds reduced regression handoff, independently replayable evidence, integer fidelity, a frozen 24-change corpus and evaluation harness, and optional semantic-source lookup. AI assistance supported research, implementation and test preparation; see [AI disclosure](https://github.com/adeelfalaksher900-creator/rowglass/blob/main/docs/AI-DISCLOSURE.md). Libraries/fonts retain their licenses. Research and alternatives are acknowledged in [research and alternatives](https://github.com/adeelfalaksher900-creator/rowglass/blob/main/docs/RESEARCH-2026-10-19.md).
+Rowglass was created on 16 October 2026 during this submission period. Version 0.4 adds the redesigned responsive workbench, compatible portable evidence, safer asynchronous review actions, bounded model transport, fail-closed public deployment and expanded validation. It retains reduced regression handoff, integer fidelity, the frozen 24-change corpus and evaluation harness, and optional semantic-source lookup. AI assistance supported research, implementation and test preparation; see [AI disclosure](https://github.com/adeelfalaksher900-creator/rowglass/blob/main/docs/AI-DISCLOSURE.md). Libraries, fonts and icons retain their licenses. Research and alternatives are acknowledged in [research and alternatives](https://github.com/adeelfalaksher900-creator/rowglass/blob/main/docs/RESEARCH-2026-10-19.md).
 
 No city attendance, verified Tavily bonus eligibility, live model accuracy, intended-user study, production adoption or winning probability is claimed.
