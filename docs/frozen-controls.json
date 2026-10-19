@@ -1,0 +1,1114 @@
+{
+  "format": "rowglass.benchmark.controls.v1",
+  "kind": "Offline synthetic controls, not live model evaluation",
+  "manifestVersion": "2026-10-19.1",
+  "manifestSha256": "9f6a815c18d181479dae1dd40960224741d8c65c2fcc45c544c8bae578f0d5ca",
+  "oracle": "Expected outputs were calculated from the small fixture rows independently of SQL execution. Each fixture records its calculation.",
+  "totals": {
+    "schemas": 6,
+    "changes": 24,
+    "wrongMutations": 18,
+    "equivalentRewrites": 6,
+    "referenceChecks": 24,
+    "referencePassed": 24,
+    "candidateChecks": 96,
+    "wrongMutationsRejected": 18,
+    "equivalentRewritesPreserved": 6
+  },
+  "referenceChecks": [
+    {
+      "schemaId": "retained-customers",
+      "fixtureId": "customers-visible-paid",
+      "passed": true
+    },
+    {
+      "schemaId": "retained-customers",
+      "fixtureId": "customers-visible-pending",
+      "passed": true
+    },
+    {
+      "schemaId": "retained-customers",
+      "fixtureId": "customers-heldout-empty",
+      "passed": true
+    },
+    {
+      "schemaId": "retained-customers",
+      "fixtureId": "customers-heldout-many",
+      "passed": true
+    },
+    {
+      "schemaId": "nullable-exclusions",
+      "fixtureId": "exclusions-visible-one",
+      "passed": true
+    },
+    {
+      "schemaId": "nullable-exclusions",
+      "fixtureId": "exclusions-visible-all",
+      "passed": true
+    },
+    {
+      "schemaId": "nullable-exclusions",
+      "fixtureId": "exclusions-heldout-null",
+      "passed": true
+    },
+    {
+      "schemaId": "nullable-exclusions",
+      "fixtureId": "exclusions-heldout-only-null",
+      "passed": true
+    },
+    {
+      "schemaId": "order-totals",
+      "fixtureId": "totals-visible-single",
+      "passed": true
+    },
+    {
+      "schemaId": "order-totals",
+      "fixtureId": "totals-visible-empty",
+      "passed": true
+    },
+    {
+      "schemaId": "order-totals",
+      "fixtureId": "totals-heldout-duplicates",
+      "passed": true
+    },
+    {
+      "schemaId": "order-totals",
+      "fixtureId": "totals-heldout-quantities",
+      "passed": true
+    },
+    {
+      "schemaId": "latest-readings",
+      "fixtureId": "readings-visible-single",
+      "passed": true
+    },
+    {
+      "schemaId": "latest-readings",
+      "fixtureId": "readings-visible-outside",
+      "passed": true
+    },
+    {
+      "schemaId": "latest-readings",
+      "fixtureId": "readings-heldout-boundaries",
+      "passed": true
+    },
+    {
+      "schemaId": "latest-readings",
+      "fixtureId": "readings-heldout-tie",
+      "passed": true
+    },
+    {
+      "schemaId": "fractional-progress",
+      "fixtureId": "progress-visible-whole",
+      "passed": true
+    },
+    {
+      "schemaId": "fractional-progress",
+      "fixtureId": "progress-visible-empty",
+      "passed": true
+    },
+    {
+      "schemaId": "fractional-progress",
+      "fixtureId": "progress-heldout-fractions",
+      "passed": true
+    },
+    {
+      "schemaId": "fractional-progress",
+      "fixtureId": "progress-heldout-zero",
+      "passed": true
+    },
+    {
+      "schemaId": "projection-bags",
+      "fixtureId": "projection-visible-single",
+      "passed": true
+    },
+    {
+      "schemaId": "projection-bags",
+      "fixtureId": "projection-visible-empty",
+      "passed": true
+    },
+    {
+      "schemaId": "projection-bags",
+      "fixtureId": "projection-heldout-bag",
+      "passed": true
+    },
+    {
+      "schemaId": "projection-bags",
+      "fixtureId": "projection-heldout-inactive",
+      "passed": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "customers-filter-in-where",
+      "schemaId": "retained-customers",
+      "taxonomy": [
+        "outer-join",
+        "filter-placement"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 1,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "customers-visible-paid",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-visible-pending",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "customers-heldout-empty",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-heldout-many",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "customers-count-star",
+      "schemaId": "retained-customers",
+      "taxonomy": [
+        "outer-join",
+        "null",
+        "aggregation"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 1,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "customers-visible-paid",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-visible-pending",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "customers-heldout-empty",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-heldout-many",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "customers-count-all-statuses",
+      "schemaId": "retained-customers",
+      "taxonomy": [
+        "join",
+        "filter-placement",
+        "aggregation"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 1,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "customers-visible-paid",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-visible-pending",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "customers-heldout-empty",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-heldout-many",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "customers-preaggregate",
+      "schemaId": "retained-customers",
+      "taxonomy": [
+        "outer-join",
+        "aggregation"
+      ],
+      "expectedClassification": "equivalent-rewrite",
+      "observedClassification": "equivalent-rewrite",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 2,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "customers-visible-paid",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-visible-pending",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-heldout-empty",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "customers-heldout-many",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "exclusions-not-in-null",
+      "schemaId": "nullable-exclusions",
+      "taxonomy": [
+        "null",
+        "anti-join"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "exclusions-visible-one",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-visible-all",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-heldout-null",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "exclusions-heldout-only-null",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "exclusions-equals-null",
+      "schemaId": "nullable-exclusions",
+      "taxonomy": [
+        "null",
+        "comparison"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 1,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "exclusions-visible-one",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "exclusions-visible-all",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-heldout-null",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "exclusions-heldout-only-null",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "exclusions-null-as-wildcard",
+      "schemaId": "nullable-exclusions",
+      "taxonomy": [
+        "null",
+        "anti-join"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "exclusions-visible-one",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-visible-all",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-heldout-null",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "exclusions-heldout-only-null",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "exclusions-left-anti-join",
+      "schemaId": "nullable-exclusions",
+      "taxonomy": [
+        "null",
+        "anti-join"
+      ],
+      "expectedClassification": "equivalent-rewrite",
+      "observedClassification": "equivalent-rewrite",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 2,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "exclusions-visible-one",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-visible-all",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-heldout-null",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "exclusions-heldout-only-null",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "totals-join-fanout",
+      "schemaId": "order-totals",
+      "taxonomy": [
+        "join",
+        "aggregation-grain",
+        "duplicates"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "totals-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-heldout-duplicates",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "totals-heldout-quantities",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "totals-distinct-amounts",
+      "schemaId": "order-totals",
+      "taxonomy": [
+        "duplicates",
+        "aggregation"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "totals-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-heldout-duplicates",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "totals-heldout-quantities",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "totals-drop-quantity",
+      "schemaId": "order-totals",
+      "taxonomy": [
+        "aggregation",
+        "arithmetic"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 1,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "totals-visible-single",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "totals-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-heldout-duplicates",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-heldout-quantities",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "totals-preaggregate",
+      "schemaId": "order-totals",
+      "taxonomy": [
+        "join",
+        "aggregation-grain"
+      ],
+      "expectedClassification": "equivalent-rewrite",
+      "observedClassification": "equivalent-rewrite",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 2,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "totals-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-heldout-duplicates",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "totals-heldout-quantities",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "readings-exclusive-boundaries",
+      "schemaId": "latest-readings",
+      "taxonomy": [
+        "boundaries",
+        "filter-placement"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "readings-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-visible-outside",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-boundaries",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "readings-heldout-tie",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "readings-ignore-tie",
+      "schemaId": "latest-readings",
+      "taxonomy": [
+        "ties",
+        "duplicates"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "readings-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-visible-outside",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-boundaries",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-tie",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "readings-lowest-tie",
+      "schemaId": "latest-readings",
+      "taxonomy": [
+        "ties",
+        "ordering"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "readings-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-visible-outside",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-boundaries",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-tie",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "readings-window-rewrite",
+      "schemaId": "latest-readings",
+      "taxonomy": [
+        "boundaries",
+        "ties",
+        "window"
+      ],
+      "expectedClassification": "equivalent-rewrite",
+      "observedClassification": "equivalent-rewrite",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 2,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "readings-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-visible-outside",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-boundaries",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "readings-heldout-tie",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "progress-integer-division",
+      "schemaId": "fractional-progress",
+      "taxonomy": [
+        "division",
+        "numeric-types"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "progress-visible-whole",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-heldout-fractions",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "progress-heldout-zero",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "progress-zero-instead-of-null",
+      "schemaId": "fractional-progress",
+      "taxonomy": [
+        "division",
+        "null"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "progress-visible-whole",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-heldout-fractions",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-heldout-zero",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "progress-reversed-ratio",
+      "schemaId": "fractional-progress",
+      "taxonomy": [
+        "division",
+        "arithmetic"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "progress-visible-whole",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-heldout-fractions",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "progress-heldout-zero",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "progress-cast-rewrite",
+      "schemaId": "fractional-progress",
+      "taxonomy": [
+        "division",
+        "numeric-types"
+      ],
+      "expectedClassification": "equivalent-rewrite",
+      "observedClassification": "equivalent-rewrite",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 2,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "progress-visible-whole",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-heldout-fractions",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "progress-heldout-zero",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "projection-distinct",
+      "schemaId": "projection-bags",
+      "taxonomy": [
+        "duplicates",
+        "projection"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 1,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "projection-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-heldout-bag",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "projection-heldout-inactive",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "projection-wrong-column",
+      "schemaId": "projection-bags",
+      "taxonomy": [
+        "columns",
+        "projection"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 0,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "projection-visible-single",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "projection-visible-empty",
+          "split": "visible",
+          "passed": false
+        },
+        {
+          "fixtureId": "projection-heldout-bag",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "projection-heldout-inactive",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "projection-include-inactive",
+      "schemaId": "projection-bags",
+      "taxonomy": [
+        "boundaries",
+        "filter-placement"
+      ],
+      "expectedClassification": "wrong-mutation",
+      "observedClassification": "wrong-mutation",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 0,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "projection-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-heldout-bag",
+          "split": "heldout",
+          "passed": false
+        },
+        {
+          "fixtureId": "projection-heldout-inactive",
+          "split": "heldout",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "id": "projection-reordered",
+      "schemaId": "projection-bags",
+      "taxonomy": [
+        "columns",
+        "duplicates",
+        "ordering"
+      ],
+      "expectedClassification": "equivalent-rewrite",
+      "observedClassification": "equivalent-rewrite",
+      "visible": {
+        "passed": 2,
+        "total": 2
+      },
+      "heldout": {
+        "passed": 2,
+        "total": 2
+      },
+      "results": [
+        {
+          "fixtureId": "projection-visible-single",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-visible-empty",
+          "split": "visible",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-heldout-bag",
+          "split": "heldout",
+          "passed": true
+        },
+        {
+          "fixtureId": "projection-heldout-inactive",
+          "split": "heldout",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "liveEvaluation": {
+    "status": "not-run",
+    "modelCalls": 0,
+    "usage": null,
+    "latency": null
+  },
+  "limitations": "Finite SQLite controls, not production data, a representative SQL workload or an equivalence proof. Public held-out data prevents within-run prompt leakage, not training-data contamination."
+}

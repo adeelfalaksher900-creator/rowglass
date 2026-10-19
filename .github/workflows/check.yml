@@ -17,3 +17,5 @@ jobs:
       - run: npm run check
       - run: node cli/rowglass.mjs check examples/inventory.case.json --query examples/inventory.good.sql --out /tmp/rowglass-ci
       - run: node cli/rowglass.mjs verify /tmp/rowglass-ci.json
+      - run: node cli/rowglass.mjs replay /tmp/rowglass-ci.json
+      - run: npm run benchmark

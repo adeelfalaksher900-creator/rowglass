@@ -1,6 +1,6 @@
 {
   "name": "rowglass",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,8 @@
     "start": "node server/local.mjs",
     "dev": "node server/local.mjs 4173 0.0.0.0 --review-frames",
     "check": "npm test && npm run build && node scripts/validate-artifact.mjs",
-    "rowglass": "node cli/rowglass.mjs"
+    "rowglass": "node cli/rowglass.mjs",
+    "benchmark": "node scripts/benchmark.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

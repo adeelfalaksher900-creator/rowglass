@@ -1,4 +1,5 @@
-import test from 'node:test';import assert from 'node:assert/strict';import initSqlJs from 'sql.js';import {readFile} from 'node:fs/promises';import {spawnSync} from 'node:child_process';
+import test from 'node:test';import assert from 'node:assert/strict';import initSqlJs from 'sql.js';import {readFile,mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';import {join} from 'node:path';import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {compileCasePack,toCasePack,modelContext,compileContext} from '../src/case-pack.mjs';
 import {scenarios} from '../src/scenarios.mjs';import {execute,evaluate,equalResults,validateRows} from '../src/engine.mjs';
@@ -18,6 +19,15 @@ test('cancelled agent does not start a provider request',async()=>{const c=new A
 test('review digest detects changed content without claiming authenticity',async()=>{const record=await sealReview({query:'SELECT 1',passed:3});assert.equal(await verifyReview(record),true);record.data.passed=9;assert.equal(await verifyReview(record),false);});
 test('portable review digest agrees with Node SHA-256 for Unicode and nested evidence',async()=>{const data={note:'SQL Δ — طالب',rows:[[1,null,'café']],query:'SELECT 1'};const record=await sealReview(data);assert.equal(record.sha256,createHash('sha256').update(JSON.stringify(data)).digest('hex'));});
 test('delta retains duplicate counts and patches contain the full edited file',()=>{const d=resultDelta([{columns:['x'],values:[[1],[1],[2]]}],[{columns:['x'],values:[[1],[3]]}]);assert.deepEqual(d.missing,[{row:[1],count:1},{row:[2],count:1}]);assert.deepEqual(d.unexpected,[{row:[3],count:1}]);assert.match(unifiedPatch('SELECT 1','SELECT 2','examples/query.sql'),/\+SELECT 2/);});
-test('CLI returns a failing exit code for a bad query and passes an independent good query',()=>{const bad=spawnSync(process.execPath,['cli/rowglass.mjs','check','examples/inventory.case.json','--out','/tmp/rowglass-cli-bad'],{encoding:'utf8'});assert.equal(bad.status,1,bad.stderr);const good=spawnSync(process.execPath,['cli/rowglass.mjs','check','examples/inventory.case.json','--query','examples/inventory.good.sql','--out','/tmp/rowglass-cli-good'],{encoding:'utf8'});assert.equal(good.status,0,good.stderr);const verify=spawnSync(process.execPath,['cli/rowglass.mjs','verify','/tmp/rowglass-cli-good.json'],{encoding:'utf8'});assert.equal(verify.status,0,verify.stderr);});
+test('CLI returns a failing exit code for a bad query and passes an independent good query',async()=>{
+ const root=await mkdtemp(join(tmpdir(),'rowglass-cli-'));
+ try{
+  const run=args=>spawnSync(process.execPath,['cli/rowglass.mjs',...args],{encoding:'utf8',timeout:20000,env:{PATH:process.env.PATH}});
+  const bad=run(['check','examples/inventory.case.json','--out',join(root,'bad')]);assert.equal(bad.status,1,bad.stderr);
+  const good=run(['check','examples/inventory.case.json','--query','examples/inventory.good.sql','--out',join(root,'good')]);assert.equal(good.status,0,good.stderr);
+  const verify=run(['verify',join(root,'good.json')]);assert.equal(verify.status,0,verify.stderr);
+  const replay=run(['replay',join(root,'good.json')]);assert.equal(replay.status,0,replay.stderr);
+ }finally{await rm(root,{recursive:true,force:true});}
+});
 test('worker timeout terminates an unbounded aggregate and the next execution recovers',async()=>{const {evaluateIsolated}=await import('../cli/rowglass.mjs');await assert.rejects(evaluateIsolated({pack,sql:'WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM x) SELECT MAX(n) FROM x'},1500),/time limit/);const result=await evaluateIsolated({pack,sql:pack.referenceSQL});assert.equal(result.passed,4);});
 test('quoted allocation functions and variable-arity format calls are blocked at SQLite runtime',()=>{const s=scenarios[0];for(const q of ['SELECT "zeroblob"(10)','SELECT "randomblob"(10)',"SELECT printf('%20s','x')","SELECT format('%s %s','x','y')"]){assert.throws(()=>execute(SQL,s,s.starter.rows,q),/disabled/);}});

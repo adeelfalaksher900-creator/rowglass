@@ -2,7 +2,7 @@ import {open,lstat,mkdir,writeFile} from 'node:fs/promises';
 import {constants} from 'node:fs';
 import {dirname,resolve} from 'node:path';
 
-export const REVIEW_MAX_BYTES=16*1024*1024;
+export {REVIEW_MAX_BYTES} from '../src/evidence.mjs';
 export async function readBoundedText(path,maxBytes,label){
   const handle=await open(path,constants.O_RDONLY|constants.O_NONBLOCK);
   try{
