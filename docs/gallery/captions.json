@@ -1,0 +1,62 @@
+[
+  {
+    "file": "01-workbench.jpg",
+    "caption": "3/9 fixtures agree. Local SQLite runs without an account; live Nebius inference remains pending."
+  },
+  {
+    "file": "02-quick-guide.jpg",
+    "caption": "Compare real outputs, preserve a regression case, then inspect a tested reference repair."
+  },
+  {
+    "file": "03-trusted-contract.jpg",
+    "caption": "An explicit behavior contract and readable baseline. Rowglass checks execution, not business intent."
+  },
+  {
+    "file": "04-exact-row-difference.jpg",
+    "caption": "Ari is missing from the proposed output. Inspect exact missing rows and duplicate occurrences."
+  },
+  {
+    "file": "05-runnable-regression.jpg",
+    "caption": "One customer row reproduces the bug. Export the verified regression case and rerun it through the CLI."
+  },
+  {
+    "file": "06-tested-reference.jpg",
+    "caption": "Hand-authored reference: 9/9 finite checks agree. Inspect the SQL diff before approving."
+  },
+  {
+    "file": "07-applied-reference.jpg",
+    "caption": "Reference applied locally. All nine curated checks agree; no production database is connected."
+  },
+  {
+    "file": "08-seeded-stress.jpg",
+    "caption": "Seed 2026 adds 24 deterministic fixtures. The reference agrees on 33/33 finite checks, not a model benchmark."
+  },
+  {
+    "file": "09-join-fanout.jpg",
+    "caption": "Join fanout incident: independent fixtures expose an inflated total that the everyday example misses."
+  },
+  {
+    "file": "10-null-exclusion.jpg",
+    "caption": "NULL-sensitive exclusion: inspect how a NOT IN rewrite changes the expected customer list."
+  },
+  {
+    "file": "11-custom-import.jpg",
+    "caption": "Import a typed, synthetic inventory case. The reference query and full fixture suite remain local."
+  },
+  {
+    "file": "12-inventory-results.jpg",
+    "caption": "Imported inventory review: the proposed query agrees on 2/4 fixtures. Inspect its query and measured result."
+  },
+  {
+    "file": "13-controlled-evaluation.jpg",
+    "caption": "Offline controls: 18 wrong changes rejected, six valid rewrites preserved. These do not measure Nemotron accuracy."
+  },
+  {
+    "file": "14-architecture.png",
+    "caption": "Architecture: local execution and portable evidence, with a private NVIDIA-on-Nebius path awaiting access."
+  },
+  {
+    "file": "15-execution-boundaries.jpg",
+    "caption": "Generation and evaluation stay separate. Repairs require explicit review; actual Nebius runtime is pending."
+  }
+]

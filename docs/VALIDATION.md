@@ -1,4 +1,18 @@
-# Current validation — v0.4
+# Current validation — v0.5
+
+19 October 2026. This checkpoint supersedes historical observations below.
+
+- `npm run check`: 144 tests pass, production ESM builds and all 16 built public-provider configuration combinations reject keyed calls with zero outbound requests.
+- Static premium UI audit with the maintained configuration: zero findings. This is not accessibility certification.
+- Fresh browser checks observed original cases at 3/9, 5/9 and 7/9, custom inventory at 2/4, explicitly hand-authored customer reference at 9/9, local apply, seed-2026 stress at 33/33, and frozen controls at 18/18 wrong changes rejected, 6/6 valid rewrites preserved, 96 candidate checks and 24/24 independent reference checks.
+- The executed fixture tile and row inspector share selection. The Ari disagreement shows one missing occurrence. Contract SQL wraps; successful reference/apply/regression actions focus their result sections.
+- Actual browser file downloads completed for both artifacts in `docs/qa/v0.5-downloaded-*.json`. Independent CLI replay reproduced all recorded original 3/9 and reference 9/9 outcomes (exit 0). The downloaded reduced regression independently reproduced the expected 0/1 mismatch (exit 1).
+- Gallery: fourteen real product captures and one exact source-based diagram under `docs/gallery/`; captions explicitly distinguish offline controls, hand-authored references and pending provider execution.
+- Live Nebius/Tavily calls, connected-provider browser checks and the separate formal security audit remain incomplete. No live accuracy, latency, credit grant, universal equivalence or full security-certification claim is made.
+
+---
+
+# Historical validation — v0.4
 
 19 October 2026. The following checkpoint supersedes the historical notes below.
 
