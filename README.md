@@ -10,13 +10,15 @@ Built for the **Coding and Agentic Engineering** track of the Nebius x NVIDIA Gl
 
 ## Status
 
-Version 0.4 source adds a redesigned syntax-colored review workbench and fail-closed public provider routes, alongside reduced regression-case handoff, independent offline review replay, faithful supported-integer handling, a frozen 24-change control corpus, one-shot versus execution-feedback evaluation controls and optional cited SQLite documentation search. Local checking needs no account or production database. See [PRD](PRD.md), [TRD](TRD.md) and [evaluation protocol](benchmark/README.md).
+Version 0.5 source adds selectable executed-fixture tiles, exact missing/unexpected-row inspection, a three-action review guide and accessible result navigation, alongside a redesigned syntax-colored review workbench and fail-closed public provider routes, alongside reduced regression-case handoff, independent offline review replay, faithful supported-integer handling, a frozen 24-change control corpus, one-shot versus execution-feedback evaluation controls and optional cited SQLite documentation search. Local checking needs no account or production database. See [PRD](PRD.md), [TRD](TRD.md) and [evaluation protocol](benchmark/README.md).
 
 **Actual Nebius inference remains unverified.** GitHub sign-in succeeded, but billing/provisioning blocks model-key and credit access. The HTTP adapter and Tavily search have mocked-transport coverage. No Tavily key or actual runtime search has been verified. These tests and the explicitly labeled hand-authored reference repairs are not live service results or bonus eligibility evidence.
 
 Public local review: [Open Rowglass](https://rowglass.adeelfalaksher900.chatgpt.site). No account or provider key is required for SQLite checks, reference review, imports, evaluation and exports. Public provider calls are disabled. This is not a complete hackathon submission; real NVIDIA-on-Nebius execution remains a release gate.
 
 Core validation: **144 tests pass** plus the production build. Fresh browser observations and limits are recorded in [VALIDATION.md](docs/VALIDATION.md).
+
+![Rowglass v0.5 local SQL review workbench](docs/gallery/01-workbench.jpg)
 
 ## Run locally
 
@@ -152,4 +154,4 @@ flowchart TD
   E --> B
 ```
 
-The private repair prompt excludes the reference SQL and full fixture suite. No actual NVIDIA-on-Nebius execution or model accuracy is claimed. The 19 October AI Cloud welcome message asks for an initial $25 deposit and supplies no grant/key. Existing ElevenLabs narration was recovered without another generation; final product captures/render still require verification after the session reset.
+The private repair prompt excludes the reference SQL and full fixture suite. No actual NVIDIA-on-Nebius execution or model accuracy is claimed. The 19 October AI Cloud welcome message asks for an initial $25 deposit and supplies no grant/key. The captioned product gallery contains fourteen actual browser captures and one source-based architecture diagram. All shown repairs are hand-authored references; the narrated review cut is explicitly marked provider-pending. See [the gallery](docs/gallery/README.md) and [current validation](docs/VALIDATION.md).

@@ -1,0 +1,2649 @@
+{
+  "format": "rowglass.review.v1",
+  "data": {
+    "version": "0.3.0",
+    "scenario": {
+      "id": "missing-customers",
+      "title": "The customers who disappeared",
+      "contract": "Return every customer once, with the number of their paid orders. Customers with no paid orders must appear with paid_orders = 0. Output customer_id, name, paid_orders. Preserve separate customers with the same name."
+    },
+    "casePack": {
+      "format": "rowglass.case.v1",
+      "id": "missing-customers",
+      "title": "The customers who disappeared",
+      "contract": "Return every customer once, with the number of their paid orders. Customers with no paid orders must appear with paid_orders = 0. Output customer_id, name, paid_orders. Preserve separate customers with the same name.",
+      "tables": [
+        {
+          "name": "customers",
+          "columns": [
+            {
+              "name": "id",
+              "type": "integer",
+              "primaryKey": true,
+              "nullable": false
+            },
+            {
+              "name": "name",
+              "type": "text",
+              "primaryKey": false,
+              "nullable": false
+            }
+          ]
+        },
+        {
+          "name": "orders",
+          "columns": [
+            {
+              "name": "id",
+              "type": "integer",
+              "primaryKey": true,
+              "nullable": false
+            },
+            {
+              "name": "customer_id",
+              "type": "integer",
+              "primaryKey": false,
+              "nullable": false,
+              "references": {
+                "table": "customers",
+                "column": "id"
+              }
+            },
+            {
+              "name": "status",
+              "type": "text",
+              "primaryKey": false,
+              "nullable": true
+            }
+          ]
+        }
+      ],
+      "baselineSQL": "SELECT c.id AS customer_id, c.name, COUNT(o.id) AS paid_orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'paid'\nGROUP BY c.id, c.name\nORDER BY c.id;",
+      "referenceSQL": "SELECT c.id AS customer_id, c.name, COUNT(o.id) AS paid_orders FROM customers c LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'paid' GROUP BY c.id, c.name ORDER BY c.id;",
+      "fixtures": [
+        {
+          "id": "happy",
+          "label": "Every customer has a paid order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                2,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "empty",
+          "label": "Empty tables",
+          "rows": {
+            "customers": [],
+            "orders": []
+          }
+        },
+        {
+          "id": "no-order",
+          "label": "Customer without an order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": []
+          }
+        },
+        {
+          "id": "unpaid",
+          "label": "Only unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "pending"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "mixed",
+          "label": "Paid and unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ],
+              [
+                3,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "pending"
+              ],
+              [
+                3,
+                2,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "duplicates",
+          "label": "Two paid orders for one customer",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "null",
+          "label": "An order with a NULL status",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                null
+              ]
+            ]
+          }
+        },
+        {
+          "id": "same-name",
+          "label": "Different customers, identical names",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Sam"
+              ],
+              [
+                2,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "zero",
+          "label": "A zero-valued primary key",
+          "rows": {
+            "customers": [
+              [
+                0,
+                "Zero"
+              ],
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                0,
+                0,
+                "paid"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "query": "SELECT c.id AS customer_id, c.name, COUNT(o.id) AS paid_orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'paid'\nGROUP BY c.id, c.name\nORDER BY c.id;",
+    "report": {
+      "passed": 3,
+      "total": 9,
+      "results": [
+        {
+          "id": "happy",
+          "label": "Every customer has a paid order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                2,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "empty",
+          "label": "Empty tables",
+          "rows": {
+            "customers": [],
+            "orders": []
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ]
+        },
+        {
+          "id": "no-order",
+          "label": "Customer without an order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": []
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ]
+        },
+        {
+          "id": "unpaid",
+          "label": "Only unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "pending"
+              ]
+            ]
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ]
+        },
+        {
+          "id": "mixed",
+          "label": "Paid and unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ],
+              [
+                3,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "pending"
+              ],
+              [
+                3,
+                2,
+                "paid"
+              ]
+            ]
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ],
+                [
+                  3,
+                  "Sam",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "duplicates",
+          "label": "Two paid orders for one customer",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  2
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  2
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "null",
+          "label": "An order with a NULL status",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                null
+              ]
+            ]
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ]
+        },
+        {
+          "id": "same-name",
+          "label": "Different customers, identical names",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Sam"
+              ],
+              [
+                2,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ]
+            ]
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Sam",
+                  1
+                ],
+                [
+                  2,
+                  "Sam",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Sam",
+                  1
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "zero",
+          "label": "A zero-valued primary key",
+          "rows": {
+            "customers": [
+              [
+                0,
+                "Zero"
+              ],
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                0,
+                0,
+                "paid"
+              ]
+            ]
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  0,
+                  "Zero",
+                  1
+                ],
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  0,
+                  "Zero",
+                  1
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "witness": {
+        "id": "no-order",
+        "label": "Customer without an order",
+        "rows": {
+          "customers": [
+            [
+              1,
+              "Ari"
+            ]
+          ],
+          "orders": []
+        },
+        "pass": false,
+        "expected": [
+          {
+            "columns": [
+              "customer_id",
+              "name",
+              "paid_orders"
+            ],
+            "values": [
+              [
+                1,
+                "Ari",
+                0
+              ]
+            ]
+          }
+        ],
+        "actual": [
+          {
+            "columns": [
+              "customer_id",
+              "name",
+              "paid_orders"
+            ],
+            "values": []
+          }
+        ],
+        "before": 1,
+        "after": 1,
+        "checks": 1,
+        "minimality": "No single row can be removed while preserving this mismatch and schema constraints. This is not a global-minimum proof."
+      }
+    },
+    "candidate": {
+      "sql": "SELECT c.id AS customer_id, c.name, COUNT(o.id) AS paid_orders FROM customers c LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'paid' GROUP BY c.id, c.name ORDER BY c.id;",
+      "label": "Hand-authored reference repair. This is not a model response.",
+      "explanation": "Hand-authored reference repair. This is not a model response.",
+      "cautions": [
+        "Hand-authored reference. Passing finite tests does not prove universal correctness."
+      ],
+      "provenance": {
+        "mode": "reference"
+      }
+    },
+    "candidateReport": {
+      "passed": 9,
+      "total": 9,
+      "results": [
+        {
+          "id": "happy",
+          "label": "Every customer has a paid order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                2,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "empty",
+          "label": "Empty tables",
+          "rows": {
+            "customers": [],
+            "orders": []
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ]
+        },
+        {
+          "id": "no-order",
+          "label": "Customer without an order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": []
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "unpaid",
+          "label": "Only unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "pending"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mixed",
+          "label": "Paid and unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ],
+              [
+                3,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "pending"
+              ],
+              [
+                3,
+                2,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ],
+                [
+                  3,
+                  "Sam",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  1
+                ],
+                [
+                  2,
+                  "Noor",
+                  1
+                ],
+                [
+                  3,
+                  "Sam",
+                  0
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "duplicates",
+          "label": "Two paid orders for one customer",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  2
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  2
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "null",
+          "label": "An order with a NULL status",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                null
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "same-name",
+          "label": "Different customers, identical names",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Sam"
+              ],
+              [
+                2,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Sam",
+                  1
+                ],
+                [
+                  2,
+                  "Sam",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Sam",
+                  1
+                ],
+                [
+                  2,
+                  "Sam",
+                  0
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "zero",
+          "label": "A zero-valued primary key",
+          "rows": {
+            "customers": [
+              [
+                0,
+                "Zero"
+              ],
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                0,
+                0,
+                "paid"
+              ]
+            ]
+          },
+          "pass": true,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  0,
+                  "Zero",
+                  1
+                ],
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  0,
+                  "Zero",
+                  1
+                ],
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "witness": null
+    },
+    "execution": {
+      "fixtures": [
+        {
+          "id": "happy",
+          "label": "Every customer has a paid order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                2,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "empty",
+          "label": "Empty tables",
+          "rows": {
+            "customers": [],
+            "orders": []
+          }
+        },
+        {
+          "id": "no-order",
+          "label": "Customer without an order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": []
+          }
+        },
+        {
+          "id": "unpaid",
+          "label": "Only unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "pending"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "mixed",
+          "label": "Paid and unpaid orders",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ],
+              [
+                2,
+                "Noor"
+              ],
+              [
+                3,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "pending"
+              ],
+              [
+                3,
+                2,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "duplicates",
+          "label": "Two paid orders for one customer",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ],
+              [
+                2,
+                1,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "null",
+          "label": "An order with a NULL status",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                null
+              ]
+            ]
+          }
+        },
+        {
+          "id": "same-name",
+          "label": "Different customers, identical names",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Sam"
+              ],
+              [
+                2,
+                "Sam"
+              ]
+            ],
+            "orders": [
+              [
+                1,
+                1,
+                "paid"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "zero",
+          "label": "A zero-valued primary key",
+          "rows": {
+            "customers": [
+              [
+                0,
+                "Zero"
+              ],
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": [
+              [
+                0,
+                0,
+                "paid"
+              ]
+            ]
+          }
+        }
+      ],
+      "original": {
+        "passed": 3,
+        "total": 9,
+        "results": [
+          {
+            "id": "happy",
+            "label": "Every customer has a paid order",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ],
+                [
+                  2,
+                  "Noor"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ],
+                [
+                  2,
+                  2,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "empty",
+            "label": "Empty tables",
+            "rows": {
+              "customers": [],
+              "orders": []
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ]
+          },
+          {
+            "id": "no-order",
+            "label": "Customer without an order",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": []
+            },
+            "pass": false,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ]
+          },
+          {
+            "id": "unpaid",
+            "label": "Only unpaid orders",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "pending"
+                ]
+              ]
+            },
+            "pass": false,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ]
+          },
+          {
+            "id": "mixed",
+            "label": "Paid and unpaid orders",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ],
+                [
+                  2,
+                  "Noor"
+                ],
+                [
+                  3,
+                  "Sam"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ],
+                [
+                  2,
+                  1,
+                  "pending"
+                ],
+                [
+                  3,
+                  2,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": false,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ],
+                  [
+                    3,
+                    "Sam",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "duplicates",
+            "label": "Two paid orders for one customer",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ],
+                [
+                  2,
+                  1,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    2
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    2
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "null",
+            "label": "An order with a NULL status",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  null
+                ]
+              ]
+            },
+            "pass": false,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ]
+          },
+          {
+            "id": "same-name",
+            "label": "Different customers, identical names",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Sam"
+                ],
+                [
+                  2,
+                  "Sam"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": false,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Sam",
+                    1
+                  ],
+                  [
+                    2,
+                    "Sam",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Sam",
+                    1
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "zero",
+            "label": "A zero-valued primary key",
+            "rows": {
+              "customers": [
+                [
+                  0,
+                  "Zero"
+                ],
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  0,
+                  0,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": false,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    0,
+                    "Zero",
+                    1
+                  ],
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    0,
+                    "Zero",
+                    1
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "witness": {
+          "id": "no-order",
+          "label": "Customer without an order",
+          "rows": {
+            "customers": [
+              [
+                1,
+                "Ari"
+              ]
+            ],
+            "orders": []
+          },
+          "pass": false,
+          "expected": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": [
+                [
+                  1,
+                  "Ari",
+                  0
+                ]
+              ]
+            }
+          ],
+          "actual": [
+            {
+              "columns": [
+                "customer_id",
+                "name",
+                "paid_orders"
+              ],
+              "values": []
+            }
+          ],
+          "before": 1,
+          "after": 1,
+          "checks": 1,
+          "minimality": "No single row can be removed while preserving this mismatch and schema constraints. This is not a global-minimum proof."
+        }
+      },
+      "candidate": {
+        "passed": 9,
+        "total": 9,
+        "results": [
+          {
+            "id": "happy",
+            "label": "Every customer has a paid order",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ],
+                [
+                  2,
+                  "Noor"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ],
+                [
+                  2,
+                  2,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "empty",
+            "label": "Empty tables",
+            "rows": {
+              "customers": [],
+              "orders": []
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": []
+              }
+            ]
+          },
+          {
+            "id": "no-order",
+            "label": "Customer without an order",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": []
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "unpaid",
+            "label": "Only unpaid orders",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "pending"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "mixed",
+            "label": "Paid and unpaid orders",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ],
+                [
+                  2,
+                  "Noor"
+                ],
+                [
+                  3,
+                  "Sam"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ],
+                [
+                  2,
+                  1,
+                  "pending"
+                ],
+                [
+                  3,
+                  2,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ],
+                  [
+                    3,
+                    "Sam",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    1
+                  ],
+                  [
+                    2,
+                    "Noor",
+                    1
+                  ],
+                  [
+                    3,
+                    "Sam",
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "duplicates",
+            "label": "Two paid orders for one customer",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ],
+                [
+                  2,
+                  1,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    2
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    2
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "null",
+            "label": "An order with a NULL status",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  null
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "same-name",
+            "label": "Different customers, identical names",
+            "rows": {
+              "customers": [
+                [
+                  1,
+                  "Sam"
+                ],
+                [
+                  2,
+                  "Sam"
+                ]
+              ],
+              "orders": [
+                [
+                  1,
+                  1,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Sam",
+                    1
+                  ],
+                  [
+                    2,
+                    "Sam",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    1,
+                    "Sam",
+                    1
+                  ],
+                  [
+                    2,
+                    "Sam",
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "zero",
+            "label": "A zero-valued primary key",
+            "rows": {
+              "customers": [
+                [
+                  0,
+                  "Zero"
+                ],
+                [
+                  1,
+                  "Ari"
+                ]
+              ],
+              "orders": [
+                [
+                  0,
+                  0,
+                  "paid"
+                ]
+              ]
+            },
+            "pass": true,
+            "expected": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    0,
+                    "Zero",
+                    1
+                  ],
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ],
+            "actual": [
+              {
+                "columns": [
+                  "customer_id",
+                  "name",
+                  "paid_orders"
+                ],
+                "values": [
+                  [
+                    0,
+                    "Zero",
+                    1
+                  ],
+                  [
+                    1,
+                    "Ari",
+                    0
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "witness": null
+      }
+    },
+    "modelCalls": [],
+    "stress": {
+      "enabled": false,
+      "seed": 2026,
+      "count": 0
+    },
+    "recordedAt": "2026-10-19T13:02:25.571Z",
+    "limitations": [
+      "Synthetic SQLite; developer-owned reference assumption.",
+      "Finite passing tests do not prove semantic equivalence.",
+      "Provider metadata is not independently signed proof."
+    ]
+  },
+  "sha256": "1a1a4d14b2a3b732c85500a4d41db626459eeff055066178366ec1a523c05681",
+  "integrityNote": "Digest identifies this record. It is not a signature, trusted attestation or proof of model provenance."
+}
