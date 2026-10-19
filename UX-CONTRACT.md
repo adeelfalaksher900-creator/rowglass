@@ -23,3 +23,5 @@ Reduced regression export permits valid zero-row databases when execution still 
 
 
 Version 0.4 reference loading is transactional: clear previous candidate/results, execute the reference, then commit SQL and its report together. Failure or stale revision leaves no candidate eligible for Apply/export as tested. This behavior is locked by tests/reference.test.mjs. DESIGN.md records the user-authorized redesign and token change; existing local review/artifact semantics remain authoritative.
+
+Version 0.5 adds a shared executed-fixture selection, inspectable missing/unexpected row multiplicities, named output tables and singular row counts. The collapsed guide reuses the existing comparison/regression/reference operations. Successful tested-reference and verified-regression actions receive focus after busy state clears. Primary navigation and current-case selection focus the workbench; Apply focuses refreshed evidence. Fixed IDs restrict focus targets. The native four-topic Select/Listbox ownership is recorded as native in premium-ui.json.

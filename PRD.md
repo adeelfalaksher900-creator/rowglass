@@ -98,3 +98,7 @@ Production warehouse connections, arbitrary uploaded DDL, automatic Git merges, 
 ## v0.4 public release slice
 
 Publish anonymous local SQL review without requiring a login. The generated public Worker must disable both model and documentation providers regardless of attached keys or mistaken environment flags. Private loopback Node/CLI inference requires exact explicit opt-in. This local public release does not satisfy P06 or the mandatory actual NVIDIA-on-Nebius runtime gate. OpenRouter is expressly disallowed as a substitute by the current hackathon FAQ. AI Cloud GitHub login was successful on 19 October; its billing screen still requires $25 and Pakistan is absent from the displayed residence options. No card or legal agreement was submitted.
+
+## v0.5 review clarity
+
+Executed fixture tiles share selection with the detailed output. The row inspector displays exact missing/unexpected multiplicities, and the guide reuses verified comparison, regression and reference actions. Successful review actions receive fixed-target focus, with reduced-motion-aware scrolling. Runtime access and model evaluation remain separate release gates.
