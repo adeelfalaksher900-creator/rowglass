@@ -1,0 +1,11 @@
+{
+  "scope": "Rowglass v0.4 security work",
+  "source_hardening_status": "completed",
+  "functional_tests_passed": 144,
+  "public_worker_gate_environment_combinations": 16,
+  "public_worker_test_outbound_calls": 0,
+  "formal_audit_run_status": "incomplete",
+  "incomplete_reason": "required_os_sandbox_unavailable_and_remaining_audit_phases_not_completed",
+  "gaps": ["required OS-isolated target validation", "remaining audit coverage verification", "required critics and verifiers", "canonical report and validator phases"],
+  "canonical_formal_audit_report": false
+}

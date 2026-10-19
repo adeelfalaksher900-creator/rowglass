@@ -1,6 +1,6 @@
 # Rowglass product requirements
 
-Version 0.3 specification, 19 October 2026 Pakistan time. Status: implementation authorized by the user's instruction to research, write the PRD/TRD and proceed autonomously. This document specifies acceptance criteria; unchecked criteria are not claims of completed functionality.
+Version 0.4 specification, 19 October 2026 Pakistan time. Status: implementation authorized by the user's instruction to research, write the PRD/TRD and proceed autonomously. This document specifies acceptance criteria; unchecked criteria are not claims of completed functionality.
 
 ## Decision and audience
 
@@ -61,7 +61,7 @@ A novice walkthrough uses the disappearing-customer example. The trusted query p
 
 ## Design contract
 
-Use the existing quiet review-desk direction: ink, petrol teal, ice surfaces and a restrained coral mismatch accent; Sora headings, IBM Plex body/code. Preserve the working layout and self-hosted fonts. Make the three task stages visible without turning the workbench into a marketing landing page. Show evidence before decorative metrics. Keep advanced exports, settings and diagnostics progressively disclosed.
+Use the user-authorized indigo review-desk redesign documented in DESIGN.md: a midnight navigation shell, dark readable SQL editor, light evidence canvas, cobalt actions and restrained copper disagreement cues. Sora headings and IBM Plex body/code stay self-hosted. Show the query and computed disagreements early. Contract, baseline and draft details remain accessible through native disclosures. Preserve the complete local review, import, evaluation and portable artifact workflow.
 
 Primary controls need visible focus, explicit loading/error/disabled states and adequate touch targets. Test 390, 768 and desktop widths with actual viewport overrides. Tables/code may scroll within their panels, while the page must not overflow horizontally. Status must include text, not color alone. A premium appearance does not establish accessibility compliance.
 
@@ -93,3 +93,8 @@ The current account still stops at Nebius billing/provisioning. Pakistan was abs
 ## Out of scope
 
 Production warehouse connections, arbitrary uploaded DDL, automatic Git merges, autonomous external messaging, model training, unsupported SQL dialect claims, formal equivalence proof and globally minimum witnesses. No real user data is required. An intentionally changed business rule needs reviewed new expectations.
+
+
+## v0.4 public release slice
+
+Publish anonymous local SQL review without requiring a login. The generated public Worker must disable both model and documentation providers regardless of attached keys or mistaken environment flags. Private loopback Node/CLI inference requires exact explicit opt-in. This local public release does not satisfy P06 or the mandatory actual NVIDIA-on-Nebius runtime gate. OpenRouter is expressly disallowed as a substitute by the current hackathon FAQ. AI Cloud GitHub login was successful on 19 October; its billing screen still requires $25 and Pakistan is absent from the displayed residence options. No card or legal agreement was submitted.

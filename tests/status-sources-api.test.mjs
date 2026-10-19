@@ -4,7 +4,7 @@ import {api} from '../server/api.mjs';
 import {scenarios} from '../src/scenarios.mjs';
 
 test('configured status never equates an injected transport with observed live inference',async()=>{
-  const env={NEBIUS_API_KEY:'test-only'};
+  const env={NEBIUS_API_KEY:'test-only',ROWGLASS_PROVIDER_MODE:'private'};
   const before=await(await api(new Request('https://example.test/api/status'),env)).json();
   assert.equal(before.configured,true);assert.equal(before.verification,'not_observed');
   const s=scenarios[0];

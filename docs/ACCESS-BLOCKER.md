@@ -33,3 +33,12 @@ Thank you for your help.
 Adeel Falak Sher
 
 No support message has been sent. Contacting organizers requires a separate instruction to send it.
+
+
+## AI Cloud retry — 19 October 2026
+
+GitHub sign-in to the official AI Cloud console succeeded. The existing tenant/project console opened. Billing setup still requires a card and explicitly states that saving billing details charges $25. Searching the residence selector for Pakistan returned “No results found.” No residence was falsified, no card entered, no agreement checked and no paid resource created. No active AI Cloud free-credit grant was verified.
+
+Current primary sources: [official FAQ](https://nebiusglobalaihackathon.devpost.com/details/faqs), [AI Cloud signup](https://docs.nebius.com/signup-billing/sign-up), [card payments](https://docs.nebius.com/signup-billing/payments/card). The FAQ explicitly says NVIDIA via OpenRouter does not satisfy the required Nebius platform runtime. An OpenRouter key was therefore not created as a workaround. The optional OpenRouter Nebius provider listing is not an organizer-approved exception.
+
+Anonymous local judge review is published independently of model provisioning. Public inference/search remain disabled in the generated Worker and runtime settings. This improves access to the local product but does not remove the mandatory actual NVIDIA-on-Nebius runtime gate. A support request drafted previously remains unsent; no new outreach was authorized in this turn.

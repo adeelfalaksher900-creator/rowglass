@@ -1,6 +1,6 @@
 # Rowglass technical requirements
 
-Version 0.3, implementing [PRD.md](PRD.md). Existing source: React 19, sql.js 1.15, Zod 4, portable SHA-256 and an esbuild-produced Worker ESM. No dependency migration is required for the core slices.
+Version 0.4, implementing [PRD.md](PRD.md). Existing source: React 19, sql.js 1.15, Zod 4, portable SHA-256 and an esbuild-produced Worker ESM. No dependency migration is required for the core slices.
 
 ## System and trust boundaries
 
@@ -61,7 +61,7 @@ Recompute the original and optional candidate in isolated workers. Compare fixtu
 
 Keep strict request/reply schemas and fixed HTTPS provider URL. Enforce at most two repair calls or one challenge call. Each proposed fixture is typed, constrained and independently executed. Keep reference/full-suite exclusion. Failure feedback uses only repair-visible fixtures. Query/case changes or cancellation invalidate old candidates and model continuations.
 
-`GET /api/status` reports configuration separately from successful provider observations. A configured key enables an explicit request, not a verified badge. Only a successfully parsed actual provider response establishes an observed call for that execution. Injected test transports never create live-verification evidence. Process memory observation is volatile and explicitly labeled; response metadata is not signed attestation.
+`GET /api/status` reports configuration separately from successful provider observations. A configured key does not enable a provider request unless exact private mode is also permitted; it is not a verified badge. Only a successfully parsed actual provider response establishes an observed call for that execution. Injected test transports never create live-verification evidence. Process memory observation is volatile and explicitly labeled; response metadata is not signed attestation.
 
 Normalize optional model and response identifiers to bounded strings and token counters to safe nonnegative integers. Missing or malformed metadata becomes unknown rather than crashing the UI. Keep generic provider errors and never return credentials or raw upstream error bodies.
 
@@ -109,3 +109,12 @@ Tests lock in user-visible failures, not line counts or superficial render snaps
 ## Remaining external questions
 
 Nebius-approved access/credits for Pakistan; optional Tavily activation; isolated backend organization/free-plan confirmation if needed; factual team eligibility; final legal submission confirmation. Continue independent implementation while these are unresolved, but do not generate final media or submit an unqualified project.
+
+
+## v0.4 provider and UI contract
+
+The public Worker passes an overriding `{...env, ROWGLASS_PROVIDER_MODE: 'local-only', ROWGLASS_PUBLIC: 'true'}` to the API. Neither forged identity headers nor environment keys can enable an outbound provider call. The deployed ESM validator exercises 16 flag combinations with dummy keys and observes zero calls for both routes. Direct API use requires `ROWGLASS_PROVIDER_MODE=private`; missing/unknown values disable access. `ROWGLASS_PUBLIC=true` overrides private mode. This mode is for a trusted loopback server, not public authorization.
+
+Status exposes key configuration, access permission and observation separately. Observed responses are scoped to the current key/model configuration. The fixed model transport rejects redirects, limits the complete UTF-8 response to 128 KiB, enforces one 60-second deadline over headers and body and cancels failed/oversized streams. Only generic error states reach the UI. No provider data is fetched during checks/build.
+
+Reference loading clears earlier candidate evidence before evaluation. Candidate and report commit together only after successful execution and while the revision remains current. SQL syntax coloring is a source-preserving presentation layer over the labeled native textarea; the evaluator remains the only execution authority. Browser QA must check editing, scrolling, focus, forced-colors fallback source and responsive pane transformation.

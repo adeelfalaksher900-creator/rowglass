@@ -12,6 +12,8 @@ import {replayReview} from '../src/replay.mjs';
 import {scenarios} from '../src/scenarios.mjs';
 import {stressFixtures} from '../src/stress.mjs';
 import {evaluateIsolated} from '../cli/rowglass.mjs';
+import {createReviewRecord} from '../src/review-record.mjs';
+import {serializeReview} from '../src/evidence.mjs';
 import {reviewMarkdown} from '../src/review.mjs';
 
 const SQL=await initSqlJs();
@@ -156,3 +158,18 @@ test('CLI exports replayable v0.3 reviews and distinguishes disagreeing and inva
   await writeFile(join(root,'missing.json'),JSON.stringify(missing));
   const invalid=cli(['replay',join(root,'missing.json')]);assert.equal(invalid.status,2,invalid.stderr);assert.match(invalid.stderr,/Export a new review/);
 }));
+
+
+test('current browser export factory preserves CLI replay compatibility across app releases',async()=>{
+  for(const scenario of [scenarios[0],compileCasePack(inventory)]){
+    const report=evaluate(SQL,scenario,scenario.broken);
+    const candidate={sql:scenario.reference,provenance:{mode:'reference'}};
+    const candidateReport=evaluate(SQL,scenario,candidate.sql);
+    const data=createReviewRecord({scenario,query:scenario.broken,report,candidate,candidateReport});
+    const envelope=JSON.parse(await serializeReview(data));
+    const replay=await replayReview(SQL,envelope);
+    assert.equal(replay.matches,true);
+    assert.equal(replay.original.total,report.total);
+    assert.equal(replay.candidate.passed,candidateReport.total);
+  }
+});

@@ -62,7 +62,7 @@ test('large valid exported reviews verify beyond the case import limit',async()=
 }));
 test('malformed optional provider metadata cannot enter render fields',async()=>{
   const s=scenarios[0],request=new Request('https://example.test/api/agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenarioId:s.id,sql:s.broken,action:'repair'})});
-  const response=await api(request,{NEBIUS_API_KEY:'test-only'},async()=>Response.json({model:{bad:true},id:{bad:true},usage:{total_tokens:{bad:true},prompt_tokens:-1,completion_tokens:2},choices:[{message:{content:JSON.stringify({sql:s.reference,explanation:'Test proposal.',cautions:[],fixture:null})}}]}));
+  const response=await api(request,{NEBIUS_API_KEY:'test-only',ROWGLASS_PROVIDER_MODE:'private'},async()=>Response.json({model:{bad:true},id:{bad:true},usage:{total_tokens:{bad:true},prompt_tokens:-1,completion_tokens:2},choices:[{message:{content:JSON.stringify({sql:s.reference,explanation:'Test proposal.',cautions:[],fixture:null})}}]}));
   assert.equal(response.status,200);const data=await response.json();
   assert.equal(typeof data.provenance.model,'string');assert.equal(data.provenance.responseId,null);assert.deepEqual(data.provenance.usage,{completion_tokens:2});
 });

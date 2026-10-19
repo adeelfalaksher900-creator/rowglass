@@ -8,7 +8,7 @@ import {serializeReview,verifyReview} from '../src/evidence.mjs';
 import {repairLoop} from '../src/agent.mjs';
 import {readBoundedText,preflightOutputs,writeNewText,REVIEW_MAX_BYTES} from './file-io.mjs';
 
-const help=`Rowglass 0.3\n\n  node cli/rowglass.mjs check <case.json> [--query <query.sql>] [--out <review-prefix>]\n  node cli/rowglass.mjs repair <case.json> [--query <query.sql>] [--out <review-prefix>]\n  node cli/rowglass.mjs verify <review.json>\n  node cli/rowglass.mjs replay <review.json>\n\ncheck exits 0 when all finite checks pass, 1 for mismatches, 2 for invalid input/setup.\nverify checks only the review digest. A matching digest is not replay or a signature.\nreplay independently executes the full recorded suite without a provider call.\nreplay exits 0 when outcomes reproduce, 1 for disagreement, 2 for invalid input/setup.\nrepair requires NEBIUS_API_KEY and sends the case contract, schema, SQL and failure rows to Nebius.\nOnly use synthetic fixtures. Reference SQL and the full fixture suite stay local.\nOutputs are review artifacts. Your query file is never overwritten.\n`;
+const help=`Rowglass 0.4\n\n  node cli/rowglass.mjs check <case.json> [--query <query.sql>] [--out <review-prefix>]\n  node cli/rowglass.mjs repair <case.json> [--query <query.sql>] [--out <review-prefix>]\n  node cli/rowglass.mjs verify <review.json>\n  node cli/rowglass.mjs replay <review.json>\n\ncheck exits 0 when all finite checks pass, 1 for mismatches, 2 for invalid input/setup.\nverify checks only the review digest. A matching digest is not replay or a signature.\nreplay independently executes the full recorded suite without a provider call.\nreplay exits 0 when outcomes reproduce, 1 for disagreement, 2 for invalid input/setup.\nrepair requires NEBIUS_API_KEY, ROWGLASS_PROVIDER_MODE=private and ROWGLASS_PUBLIC!=true. It sends the case contract, schema, SQL and failure rows to Nebius.\nOnly use synthetic fixtures. Reference SQL and the full fixture suite stay local.\nOutputs are review artifacts. Your query file is never overwritten.\n`;
 export function evaluateIsolated(payload,timeout=8000){return new Promise((resolve,reject)=>{
   const worker=new Worker(new URL('./evaluate-worker.mjs',import.meta.url),{workerData:payload,resourceLimits:{maxOldGenerationSizeMb:96}});
   const timer=setTimeout(()=>{worker.terminate();reject(new Error('SQL execution reached its eight-second time limit.'));},timeout);
@@ -41,6 +41,7 @@ async function main(){
   let report=baseline,candidate=null,modelCalls=[];
   if(command==='repair'){
     if(!process.env.NEBIUS_API_KEY)throw new Error('NEBIUS_API_KEY is required. No model call was made.');
+    if(process.env.ROWGLASS_PROVIDER_MODE!=='private'||process.env.ROWGLASS_PUBLIC==='true')throw new Error('Repair requires ROWGLASS_PROVIDER_MODE=private and ROWGLASS_PUBLIC must not be true. No model call was made.');
     const result=await repairLoop({sql,action:'repair',initialReport:baseline,
       evaluateSQL:(query,extra)=>evaluateIsolated({pack,sql:query,extra}),
       requestProposal:async task=>{const r=await api(new Request('http://localhost/api/agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenarioId:s.id,scenarioContext:modelContext(s),...task})}),process.env);const data=await r.json();if(!r.ok)throw new Error(data.error);return data;},

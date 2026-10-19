@@ -1,0 +1,51 @@
+{
+  "checked_at": "2026-10-19T07:18:08.927357+00:00",
+  "method": "standard anonymous HTTPS GET; system certificate validation; no cookie jar or authorization",
+  "base_url": "https://rowglass.adeelfalaksher900.chatgpt.site",
+  "requests": [
+    {
+      "path": "/",
+      "status": 200,
+      "final_url": "https://rowglass.adeelfalaksher900.chatgpt.site/",
+      "request_has_cookie": false,
+      "request_has_authorization": false,
+      "headers": {
+        "content-type": "text/html;charset=utf-8",
+        "cache-control": "no-cache",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self' data:; img-src 'self' data:; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'self' https://chatgpt.com",
+        "referrer-policy": "no-referrer",
+        "x-content-type-options": "nosniff"
+      },
+      "contains_rowglass": true
+    },
+    {
+      "path": "/api/status",
+      "status": 200,
+      "final_url": "https://rowglass.adeelfalaksher900.chatgpt.site/api/status",
+      "request_has_cookie": false,
+      "request_has_authorization": false,
+      "headers": {
+        "content-type": "application/json",
+        "cache-control": "no-store",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self' data:; img-src 'self' data:; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'self' https://chatgpt.com",
+        "referrer-policy": "no-referrer",
+        "x-content-type-options": "nosniff"
+      },
+      "body": {
+        "keyConfigured": false,
+        "providerAccess": "local-only",
+        "configured": false,
+        "provider": "Nebius Token Factory",
+        "model": "nvidia/nvidia-nemotron-3-nano-30b-a3b",
+        "liveVerified": false,
+        "verification": "not_observed",
+        "observation": null,
+        "observationScope": "This server instance and current model/key configuration only; response metadata is not signed proof.",
+        "sourcesKeyConfigured": false,
+        "sourcesConfigured": false,
+        "note": "A configured key, enabled private access and an observed response are separate states."
+      }
+    }
+  ],
+  "scope": "local-only public access, not evidence of NVIDIA/Nebius inference or future uptime"
+}

@@ -1,4 +1,4 @@
-# Rowglass v0.3 task checklist
+# Rowglass task checklist
 
 - [x] Research official rules, organizer guidance, past winners and close primary-source competitors.
 - [x] Write PRD/TRD, capability map, trust boundaries, acceptance criteria and implementation order.
@@ -18,3 +18,19 @@
 Checkpoint: 120 tests and production ESM build pass. Six independent review findings fixed and rechecked. T08 core local UI flows were checked in the deployed browser. T11 is complete: public PR2 merged after remote CI and the Devpost draft save was verified; T09/T10 remain external release gates. Connected-provider UI and final media remain gated.
 
 Public release checkpoint: PR2 merged after CI run 39185149506 passed. Runtime and code are unchanged by this documentation checkpoint. See docs/RELEASE-2026-10-19.md.
+
+
+## v0.4 checkpoint
+
+- [x] User-authorized indigo/dark-editor redesign with accessible contract/draft disclosure.
+- [x] Public local judge access, independently checked without login.
+- [x] Fail-closed public Worker, bounded transport, CI pins and local/private separation.
+- [x] Reference/reset evidence and browser-to-CLI compatibility fixes; invalid-input recovery and source-preserving scrolling.
+- [x] 144 functional tests, production/artifact checks and bounded independent review.
+- [x] Current browser replay and reduced regression artifacts executed through the CLI.
+- [ ] Complete the separate formal security-audit protocol in a supported isolated executor.
+- [ ] Actual NVIDIA-on-Nebius runtime and granted-credit verification.
+- [ ] Durable allowances before live judge inference; optional Tavily actual runtime.
+- [ ] Factual eligibility answers and final media/submission.
+
+The public local demo resolves anonymous access, not actual model execution. AI Cloud GitHub login succeeds but billing still requests $25 and Pakistan is absent. OpenRouter is explicitly disallowed as a substitute by the current official FAQ.
