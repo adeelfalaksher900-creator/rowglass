@@ -478,3 +478,44 @@ tr:last-child td {border-bottom:0}
 .button.nav {min-height:44px}
 .sidebar-note a {min-height:44px}
 .footer>a {min-height:44px;display:inline-flex;align-items:center}
+
+/* v0.5: restrained sheen and measured execution evidence. */
+.topbar {background:radial-gradient(ellipse at 14% -70%,#697dcc42,transparent 58%),var(--shell);box-shadow:inset 0 1px #ffffff0d}
+.panel {box-shadow:inset 0 1px #ffffffaa}
+.query-panel {box-shadow:0 7px 20px #171d3510,inset 0 1px #ffffff12}
+.case,.test-row {transition:background-color 140ms,border-color 140ms}
+.baseline-note pre,.candidate-grid pre {white-space:pre-wrap;overflow-wrap:anywhere}
+.candidate-grid pre {min-height:140px}
+.review-guide {margin:0 0 18px}
+.review-guide>summary {padding:14px 18px;cursor:pointer;font-size:13px;color:var(--ink);min-height:48px}
+.guide-steps {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;padding:8px 18px 20px}
+.guide-steps p {font-size:13px;line-height:1.6;color:var(--muted);margin:8px 0 14px}
+.guide-steps .button {min-height:44px}
+.fixture-overview {margin:18px 0;padding:16px}
+.fixture-overview-head {display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;font-size:13px}
+.fixture-overview-head>span {font:11px var(--font-code);color:var(--muted)}
+.fixture-tiles {display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));gap:8px}
+.fixture-tile {display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:50px;padding:10px;border:1px solid transparent;border-radius:6px;font-size:12px;cursor:pointer;text-align:left}
+.fixture-tile>span {font:10px var(--font-code)}
+.fixture-tile.pass {background:#e7f4ed;color:var(--success)}
+.fixture-tile.fail,.fixture-tile.invalid {background:#fff0e9;color:var(--coral)}
+.fixture-tile[aria-pressed=true] {border-color:currentColor;box-shadow:inset 0 0 0 1px currentColor}
+.fixture-overview>.caption {margin:12px 0 0}
+.row-difference {margin-top:14px;font-size:13px}
+.row-difference>summary {cursor:pointer;min-height:44px;display:flex;align-items:center}
+.delta-summary {display:block}
+.row-difference-grid {display:grid;grid-template-columns:1fr;gap:18px;margin-top:8px}
+.row-difference-grid>div {min-width:0}
+.row-difference h3 {font-size:13px;margin:0 0 10px}
+#main {scroll-margin-top:68px}
+#tested-candidate,#regression-ready {scroll-margin-top:90px}
+#executed-evidence:focus-visible,#tested-candidate:focus-visible,#regression-ready:focus-visible {outline:3px solid var(--focus);outline-offset:5px}
+@media (prefers-reduced-motion:no-preference){
+ .candidate,.regression-ready {animation:review-arrive 200ms ease-out}
+ @keyframes review-arrive {from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+}
+@media (max-width:680px){
+ .guide-steps,.row-difference-grid {grid-template-columns:1fr}
+ .fixture-overview-head {align-items:flex-start;flex-direction:column;gap:8px}
+ #main {scroll-margin-top:16px}
+}

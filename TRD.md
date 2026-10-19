@@ -118,3 +118,7 @@ The public Worker passes an overriding `{...env, ROWGLASS_PROVIDER_MODE: 'local-
 Status exposes key configuration, access permission and observation separately. Observed responses are scoped to the current key/model configuration. The fixed model transport rejects redirects, limits the complete UTF-8 response to 128 KiB, enforces one 60-second deadline over headers and body and cancels failed/oversized streams. Only generic error states reach the UI. No provider data is fetched during checks/build.
 
 Reference loading clears earlier candidate evidence before evaluation. Candidate and report commit together only after successful execution and while the revision remains current. SQL syntax coloring is a source-preserving presentation layer over the labeled native textarea; the evaluator remains the only execution authority. Browser QA must check editing, scrolling, focus, forced-colors fallback source and responsive pane transformation.
+
+## v0.5 review clarity
+
+Executed fixture tiles share selection with the detailed output. The row inspector displays exact missing/unexpected multiplicities, and the guide reuses verified comparison, regression and reference actions. Successful review actions receive fixed-target focus, with reduced-motion-aware scrolling. Runtime access and model evaluation remain separate release gates.

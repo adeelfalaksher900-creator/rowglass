@@ -138,3 +138,18 @@ MIT. Bundled libraries and fonts retain their own licenses; see [third-party not
 ## Current platform access
 
 GitHub login to Nebius AI Cloud succeeded on 19 October 2026. Its billing page requires a $25 card top-up; Pakistan was not available in the displayed residence list. No card or agreement was submitted. The official hackathon FAQ explicitly excludes OpenRouter as a substitute for a direct Nebius runtime, even though NVIDIA models exist there. See [the current access record](docs/ACCESS-BLOCKER.md) and [official FAQ](https://nebiusglobalaihackathon.devpost.com/details/faqs). No unapproved provider fallback is built into this submission.
+
+## Review clarity and execution boundary
+
+Version 0.5 maps every executed fixture to a selectable Pass/Fail/Invalid tile, exposes exact missing/unexpected duplicate occurrences, and adds a short guide using actual review actions. Baseline/candidate SQL wraps; focus follows successful review actions and navigation. The public deployment remains local-only.
+
+```mermaid
+flowchart TD
+  A["Synthetic case and trusted baseline"] --> B["Local SQLite execution"]
+  B --> C["Exact row comparison"]
+  C --> D["Reduced regression and offline replay"]
+  C --> E["Private Nemotron adapter: access pending"]
+  E --> B
+```
+
+The private repair prompt excludes the reference SQL and full fixture suite. No actual NVIDIA-on-Nebius execution or model accuracy is claimed. The 19 October AI Cloud welcome message asks for an initial $25 deposit and supplies no grant/key. Existing ElevenLabs narration was recovered without another generation; final product captures/render still require verification after the session reset.

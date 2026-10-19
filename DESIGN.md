@@ -93,3 +93,7 @@ Calculate visible counts from executed results. Keep model proposals, hand-autho
 | Same weight across all panes | Dark query, neutral evidence, warm witness | Visually separate input, measured outputs and regression handoff |
 
 Verification evidence belongs in `docs/VALIDATION.md` and `docs/qa/`. The previous screenshots remain historical evidence, not verification of this release.
+
+## v0.5 review clarity
+
+The user requested a glossy but minimal finish. A localized header sheen and subtle panel highlights retain flat, readable code/data surfaces. A collapsed three-step guide invokes actual existing actions. Selectable Pass/Fail/Invalid tiles map the executed fixtures; the detailed output and tile map share selection. The row inspector lists exact duplicate-sensitive missing/unexpected rows and differing column contracts. Baseline and candidate SQL wrap. Fixed-target focus follows explicit successful review actions and primary navigation, including selecting the current case from another view. Entry motion respects reduced-motion preferences. The project still makes no live inference or universal correctness claim.
