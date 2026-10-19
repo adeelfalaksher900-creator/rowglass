@@ -1,0 +1,25 @@
+{
+  "duration_seconds": 120,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "bytes": 20895690,
+  "sha256": "3297e685239c2e16dca6fcfb5826cd5a96aa2c7b9bfb73d6bd936276bf9cf569",
+  "video_packet_sha256": "5c0f49083908f12f5559fc48cebe42d79c4a5c487741d82750d3d041b00fefa9",
+  "video_packets_match_native_render": true,
+  "full_decode_exit_code": 0,
+  "audio_integrated_lufs": -16.14,
+  "audio_true_peak_dbtp": -1.45,
+  "audio_lra_lu": 3.9,
+  "native_snapshot_count": 20,
+  "encoded_frames_inspected_seconds": [
+    2,
+    60,
+    116
+  ],
+  "provider_runtime": "pending",
+  "all_shown_repairs": "hand-authored references",
+  "notes": "Native Hyperframes low-memory render; narration mastered with a two-pass FFmpeg loudness filter. Video packets are unchanged. Studio preview did not become ready; its cleanup telemetry request was rejected by automatic approval review and was not retried."
+}
