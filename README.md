@@ -1,157 +1,154 @@
 # Rowglass
 
-Review SQL changes with executable counterexamples.
+**Review SQL changes with executable counterexamples.**
 
-Rowglass helps analytics engineers and small software teams review a behavior-preserving SQL refactor or AI-written rewrite. Supply a trusted baseline, proposed query and synthetic fixtures. Rowglass reproduces differences, reduces a disagreement to inspectable rows, tests repair proposals and exports a regression case another reviewer can run. The browser workbench and repository CLI share the same SQLite evaluator.
+![JavaScript](https://img.shields.io/badge/JavaScript-ES_modules-F7DF1E?logo=javascript&logoColor=111827)
+![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-sql.js-003B57?logo=sqlite&logoColor=white)
+![MIT](https://img.shields.io/badge/License-MIT-2563EB)
 
-The trusted baseline is an explicit assumption. If the business rule intentionally changes, supply reviewed new expectations; the old query does not establish the new intent. Rowglass does not infer business correctness from a model explanation.
+[Open the workbench](https://rowglass.adeelfalaksher900.chatgpt.site) · [CLI and case format](docs/CASE-PACKS.md) · [Evaluation](benchmark/README.md) · [PRD](PRD.md) · [TRD](TRD.md) · [Security](SECURITY.md)
 
-Built for the **Coding and Agentic Engineering** track of the Nebius x NVIDIA Global AI Hackathon. [MIT licensed](LICENSE).
+Rowglass helps analytics engineers review a behavior-preserving SQL refactor or an AI-written rewrite. Supply a trusted baseline, proposed query and synthetic fixtures. Reproduce a disagreement, inspect missing or unexpected rows, reduce it to a small counterexample, test a repair proposal, and export a regression case another reviewer can run. The browser and repository CLI share the same SQLite evaluator.
 
-## Status
+The trusted baseline is a declared assumption. For an intentional behavior change, provide reviewed new expectations; a model explanation cannot establish business correctness.
 
-Version 0.5 source adds selectable executed-fixture tiles, exact missing/unexpected-row inspection, a three-action review guide and accessible result navigation, alongside a redesigned syntax-colored review workbench and fail-closed public provider routes, alongside reduced regression-case handoff, independent offline review replay, faithful supported-integer handling, a frozen 24-change control corpus, one-shot versus execution-feedback evaluation controls and optional cited SQLite documentation search. Local checking needs no account or production database. See [PRD](PRD.md), [TRD](TRD.md) and [evaluation protocol](benchmark/README.md).
+## Current status
 
-**Actual Nebius inference remains unverified.** GitHub sign-in succeeded, but billing/provisioning blocks model-key and credit access. The HTTP adapter and Tavily search have mocked-transport coverage. No Tavily key or actual runtime search has been verified. These tests and the explicitly labeled hand-authored reference repairs are not live service results or bonus eligibility evidence.
+Version 0.5 provides local SQL review, selectable executed-fixture tiles, exact duplicate-row differences, reduced regression export and independent offline replay. These local workflows require no provider account or production database.
 
-Public local review: [Open Rowglass](https://rowglass.adeelfalaksher900.chatgpt.site). No account or provider key is required for SQLite checks, reference review, imports, evaluation and exports. Public provider calls are disabled. This is not a complete hackathon submission; real NVIDIA-on-Nebius execution remains a release gate.
+**The public app is local-only. Actual NVIDIA-on-Nebius inference remains unverified and is a hackathon release gate.** The private adapter has mocked-transport coverage; the displayed reference repairs are hand-authored controls. Provider tests do not establish live accuracy, latency, credits or special-award eligibility. See [the access record](docs/ACCESS-BLOCKER.md), [rule audit](docs/RULES-AUDIT.md) and [validation](docs/VALIDATION.md).
 
-Core validation: **144 tests pass** plus the production build. Fresh browser observations and limits are recorded in [VALIDATION.md](docs/VALIDATION.md).
+![Rowglass SQL review workbench](docs/gallery/01-workbench.jpg)
 
-![Rowglass v0.5 local SQL review workbench](docs/gallery/01-workbench.jpg)
+## Quick start
 
-## Run locally
-
-Use Node.js 24 or newer.
+Use Node.js 24 or newer and npm.
 
 ```sh
+git clone https://github.com/adeelfalaksher900-creator/rowglass.git
+cd rowglass
 npm ci
 npm run check
 npm start
 ```
 
-Open http://localhost:3000. All example data is synthetic.
+Open http://localhost:3000. All bundled case data is synthetic.
 
-### Five-minute browser workflow
+| Command | Purpose |
+| --- | --- |
+| `npm test` | Node regression tests |
+| `npm run build` | Compile the application |
+| `npm run check` | Tests, build and artifact validation |
+| `npm run benchmark` | Frozen-corpus control report; no provider call |
+| `node scripts/evaluate.mjs` | Built-in local evaluation controls |
+| `npm run rowglass -- --help` | Repository CLI reference |
 
-1. Open the missing-customers example. The proposed change passes 3/9 curated checks but drops customers the trusted baseline retains.
-2. Inspect expected/proposed rows and the reduced one-row counterexample.
-3. Choose **Prepare regression case**. Rowglass validates and reruns the reduced case before offering its JSON download and copyable JSON. This artifact contains the failing proposal, trusted reference and reduced synthetic rows.
-4. Load the explicitly **hand-authored reference repair**, inspect its diff and 9/9 results, then apply it. This demonstrates review mechanics, not model inference.
-5. Run the 24 additional fixtures with seed 2026. The reference passes 33/33 finite checks.
-6. Export JSON or Markdown evidence and, when present, the proposed SQL patch. Version 0.3 and later JSON reviews include the execution suite for independent CLI replay. Copyable review text is available when a browser download is unavailable.
-7. Open **Your case**, load the inventory example, confirm synthetic data and validate it. Its proposed query fails 2/4 checks; its reference passes 4/4.
+## A review in five minutes
 
-Query text is transient unless you choose **Save local draft**. Restore and forget controls manage one browser draft. A model request sends the selected synthetic schema, contract, proposed SQL and bounded failure evidence to Nebius. A documentation request sends only a fixed generic SQL topic to Tavily, without case SQL, identifiers or rows.
+1. Open **Missing customers**. The proposed query drops customers retained by the trusted baseline.
+2. Inspect expected/proposed rows and the reduced counterexample. Fixture tiles expose the exact finite checks performed.
+3. Choose **Prepare regression case**. Rowglass validates and reruns the reduced reproduction before offering JSON download and copyable text.
+4. Load the explicitly labeled hand-authored reference repair, inspect its diff and results, then apply it. This shows review mechanics, not live inference.
+5. Run additional seeded fixtures, or open **Your case** and validate the inventory example.
+6. Export JSON/Markdown evidence and, when available, a proposed SQL patch. The versioned execution envelope supports independent CLI replay.
 
-## Check a query in a repository
+Query text is transient unless **Save local draft** is chosen. Restore/forget controls manage one browser draft. A reduced case reproduces an observed disagreement; it does not replace the full suite.
 
-```sh
-# Proposed query: 2/4 checks, exit code 1.
-node cli/rowglass.mjs check examples/inventory.case.json --out /tmp/proposal
-
-# Trusted correct query: 4/4 checks, exit code 0.
-node cli/rowglass.mjs check examples/inventory.case.json \
-  --query examples/inventory.good.sql --out /tmp/review
-
-# Digest only. Does not rerun SQL or authenticate the record.
-node cli/rowglass.mjs verify /tmp/review.json
-
-# Independent offline execution of every recorded fixture and query.
-node cli/rowglass.mjs replay /tmp/review.json
-
-# A matching replay also reproduces an originally failing review, exit code 0.
-node cli/rowglass.mjs replay /tmp/proposal.json
-
-# Run a downloaded reduced reproduction. Original proposal should fail.
-node cli/rowglass.mjs check downloaded.regression.case.json --out /tmp/regression
-```
-
-`check` writes JSON and Markdown reviews. Choose a fresh `--out` prefix for each run. Existing outputs, input-file collisions and existing output aliases are refused before evaluation; exclusive creation prevents overwriting files introduced after that check. Inputs must be regular files. Case files are limited to 200,000 characters (800,000 bytes), queries to 48,000 bytes and 12,000 characters, and JSON reviews to 16 MiB.
-
-`check` exits 0 for finite agreement, 1 for mismatch and 2 for invalid input/setup. `replay` first checks the digest, validates the recorded case and full suite, then recomputes original and optional candidate outcomes without calling a provider. It exits 0 when outcomes reproduce, 1 for disagreement and 2 for invalid or incomplete evidence. Earlier reviews lacking the version 0.3 execution envelope must be exported again. Replay does not authenticate provider metadata or prove that an original model call occurred.
-
-[The CI workflow](.github/workflows/check.yml) includes local checks, the inventory example, digest verification, offline replay and frozen-corpus validation. A passing suite is not universal correctness proof.
-
-### Bring your own synthetic case
-
-Start with [inventory.case.json](examples/inventory.case.json). A `rowglass.case.v1` pack declares a contract, structured tables/columns, proposed SQL, trusted reference and fixtures. The format's existing `baselineSQL` field contains the **proposal under test**; `referenceSQL` contains the **trusted behavioral baseline**. Raw DDL is rejected. Each table starts with an integer primary key; foreign keys reference an earlier table. Types are integer, real and text.
-
-Limits: 6 tables, 16 columns per table, 30 fixtures and 100 input rows per fixture. The case author owns the reference's business correctness. Rowglass validates constraints and execution, not intent. A reduced export reproduces one observed disagreement; it does not replace the full regression suite. See [the case format and CLI](docs/CASE-PACKS.md).
-
-## NVIDIA Nemotron on Nebius
-
-For a trusted loopback Node server or CLI, configure `NEBIUS_API_KEY` outside source, explicitly set `ROWGLASS_PROVIDER_MODE=private` and `ROWGLASS_PUBLIC=false`, then start the app or run:
-
-```sh
-node cli/rowglass.mjs repair examples/inventory.case.json \
-  --out /tmp/model-review
-```
-
-`repair` preserves the input SQL file and produces a candidate, unified patch and executed review. A task makes at most two repair calls: propose, execute, send bounded visible failures back, then execute the revision. Challenge mode retains the current SQL and tests a proposed synthetic fixture. Reference SQL and the full evaluation suite stay outside model context. Candidate approval is explicit.
-
-The fixed endpoint is `https://api.tokenfactory.nebius.com/v1/chat/completions`. The default NVIDIA model ID is `nvidia/nvidia-nemotron-3-nano-30b-a3b`, taken from the official cookbook. Confirm actual catalog availability before a live run; `NEBIUS_MODEL` accepts a `nvidia/...` override. A configured key is distinct from an observed successful response. Provider response IDs and returned usage are metadata, not signed attestations. No live accuracy, latency or granted-credit claim is established.
-
-Missing or unknown provider mode disables all keyed requests. The generated public Worker unconditionally overrides the mode to local-only, regardless of runtime keys or flags. To offer live inference publicly, a separately reviewed deployment with verified identity and durable limits is required. Credentials stay server-side. The private server has a shared in-memory 12-call hourly inference cap; this is not durable authorization or a quota ledger. `ROWGLASS_PUBLIC=true` disables live inference and documentation search even when keys exist. Retain this guard until authenticated access, durable allowances and concurrency controls are independently verified. The project provisions no GPU or Supabase database. Supabase would support persistent allowances or shared records if needed; it would not replace required Nebius runtime.
-
-### Optional official-document search
-
-Set `TAVILY_API_KEY` server-side together with the explicit private mode above to enable **Search official docs** on a private configured server. Four fixed topics cover outer joins, NULL/NOT IN, aggregate duplicates and integer division. The adapter makes a bounded basic Tavily search restricted to official SQLite domains and validates returned HTTPS links. Results are rendered as text citations. Unconfigured searches return an unavailable state without a provider call. Sources explain semantics; they never grade results or alter the trusted reference. Actual Tavily runtime and bonus eligibility remain unverified.
-
-## What the evidence means
-
-| Control | Offline evidence | Interpretation |
-|---|---|---|
-| Three built-in references, 9 curated + 24 seeded fixtures each | 99/99 agree, seed 2026 | Positive controls for three synthetic workflows |
-| Nine deliberately wrong repairs | 9/9 rejected | Separate workbench negative controls |
-| Custom inventory reference | 4/4 agree | Reusable case format and CLI execution |
-| Frozen corpus | 24 changes, six schemas; 18 wrong mutations and six equivalent rewrites | Hand-authored controls, not collected model mistakes |
-| Frozen reference validation | 24 fixture checks against hand-calculated expectations | Finite oracle checks |
-| Frozen candidate validation | 96 fixture checks; wrong changes rejected and equivalent rewrites preserved | Evaluator controls, not repair accuracy |
-| One-shot and execution-feedback harness | Implemented; injected-proposal tests only | Visible/held-out boundary and measurement protocol |
-| Nebius/Tavily adapter coverage | Mocked transports | Protocol and failure handling only |
-| Live service/model evaluation | Not run | No model-quality, usage or latency results |
-
-Run `node scripts/evaluate.mjs` for [the three-case controls](docs/local-evaluation.json) and `npm run benchmark` for the frozen corpus report on stdout. The latter writes nothing by default and makes no provider calls. See [benchmark/README.md](benchmark/README.md) for the manifest digest, hand calculations and opt-in proposal harness. The two visible/two held-out fixtures per schema are public. Their split protects the within-run prompt boundary, not a secret independent benchmark or pretraining exclusion.
-
-The repair harness compares one-shot proposals with at most two execution-feedback rounds under explicit call limits. Held-out scoring starts after repair stops. Generated challenge fixtures do not inflate the frozen denominator. False acceptance, mis-repair, errors and exhausted loops remain reported. Live runs have not occurred.
-
-Result comparison preserves duplicate counts and exact column names, including empty outputs; row order is ignored. SQLite INTEGER outputs are read as BigInt before conversion. Only integers from -9,007,199,254,740,991 through 9,007,199,254,740,991 are supported; larger values are rejected rather than rounded. Finite REAL results use exact JavaScript-number comparison without a tolerance. This is not arbitrary 64-bit integer support.
-
-A greedy reducer removes rows while preserving constraints and a value mismatch. Its result is single-row irreducible under that procedure, not globally smallest. SQL runs in a disposable browser worker or Node worker thread with an eight-second timeout. Outputs are limited to 1,000 rows, 32 columns, 10,000 characters per text cell and one million serialized row characters per query. Blob allocation/formatting functions, binary and non-finite outputs are rejected. These guards are not a complete WebAssembly memory sandbox or security certification.
-
-## Review and release materials
-
-- [Product requirements](PRD.md), [technical requirements](TRD.md) and [current research](docs/RESEARCH-2026-10-19.md)
-- [Rule-by-rule status](docs/RULES-AUDIT.md) and [judging evidence](docs/JUDGING-EVIDENCE.md)
-- [Validation and observed limitations](docs/VALIDATION.md)
-- [Devpost draft](docs/DEVPOST-DRAFT.md), [AI disclosure](docs/AI-DISCLOSURE.md) and [prior review checkpoint](docs/REVIEW-CHECKPOINT.md)
-- [Access blocker](docs/ACCESS-BLOCKER.md)
-
-SQL testing, execution-guided repair and small distinguishing databases have substantial prior art. Rowglass's product hypothesis is low-setup browser investigation plus a portable repository handoff. It does not claim to invent these techniques.
-
-Real NVIDIA-on-Nebius runtime, any live judge inference and its durable allowance gate, completion of the separately requested formal security audit, factual eligibility answers and final public English YouTube media remain release gates. Anonymous local judge review is published; its exact browser checks and limits are recorded in VALIDATION.md. Video, narration and the 15-image gallery follow the final tested product. No adoption, time-saving study, per-track participation counts or winning odds are invented.
-
-## License
-
-MIT. Bundled libraries and fonts retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md) and [license copies](licenses/). The app also serves bundled notices at `/licenses.txt`.
-
-
-## Current platform access
-
-GitHub login to Nebius AI Cloud succeeded on 19 October 2026. Its billing page requires a $25 card top-up; Pakistan was not available in the displayed residence list. No card or agreement was submitted. The official hackathon FAQ explicitly excludes OpenRouter as a substitute for a direct Nebius runtime, even though NVIDIA models exist there. See [the current access record](docs/ACCESS-BLOCKER.md) and [official FAQ](https://nebiusglobalaihackathon.devpost.com/details/faqs). No unapproved provider fallback is built into this submission.
-
-## Review clarity and execution boundary
-
-Version 0.5 maps every executed fixture to a selectable Pass/Fail/Invalid tile, exposes exact missing/unexpected duplicate occurrences, and adds a short guide using actual review actions. Baseline/candidate SQL wraps; focus follows successful review actions and navigation. The public deployment remains local-only.
+## Architecture
 
 ```mermaid
 flowchart TD
-  A["Synthetic case and trusted baseline"] --> B["Local SQLite execution"]
-  B --> C["Exact row comparison"]
-  C --> D["Reduced regression and offline replay"]
-  C --> E["Private Nemotron adapter: access pending"]
-  E --> B
+  C["Synthetic case and trusted reference"] --> V["Bounded case validation"]
+  V --> E["Disposable SQLite worker"]
+  E --> D["Exact row and duplicate comparison"]
+  D --> R["Counterexample and regression export"]
+  R --> P["Independent CLI replay"]
+  D --> N["Private repair adapter: live access pending"]
+  N --> E
 ```
 
-The private repair prompt excludes the reference SQL and full fixture suite. No actual NVIDIA-on-Nebius execution or model accuracy is claimed. The 19 October AI Cloud welcome message asks for an initial $25 deposit and supplies no grant/key. The captioned product gallery contains fourteen actual browser captures and one source-based architecture diagram. All shown repairs are hand-authored references; the narrated review cut is explicitly marked provider-pending. See [the gallery](docs/gallery/README.md) and [current validation](docs/VALIDATION.md).
+The browser/CLI own execution and the trusted reference. A private repair loop requests a proposal, executes it, and returns bounded visible failures for at most one revision. The reference SQL and full fixture suite stay outside model context. Human approval remains explicit; model output cannot execute shell commands, choose a destination or write a repository.
+
+## Repository CLI
+
+```sh
+# Failing proposal: check exits 1 for a mismatch.
+node cli/rowglass.mjs check examples/inventory.case.json --out /tmp/proposal
+
+# Trusted query: check exits 0 for finite agreement.
+node cli/rowglass.mjs check examples/inventory.case.json \
+  --query examples/inventory.good.sql --out /tmp/review
+
+# Digest verification alone does not execute SQL or authenticate a record.
+node cli/rowglass.mjs verify /tmp/review.json
+
+# Recompute every recorded fixture/query, without a provider.
+node cli/rowglass.mjs replay /tmp/review.json
+
+# Replay can successfully reproduce an originally failing review.
+node cli/rowglass.mjs replay /tmp/proposal.json
+
+# Check an exported reduced reproduction.
+node cli/rowglass.mjs check downloaded.regression.case.json --out /tmp/regression
+```
+
+`check` writes JSON and Markdown using a fresh output prefix. It refuses existing outputs, input collisions and aliases, and requires regular input files. Exit codes are **0** for finite agreement, **1** for mismatch and **2** for invalid input/setup. `replay` checks the digest and execution envelope before recomputing outcomes; success means reproducibility, not that the original query was correct or that a model call occurred. Older reviews without the version 0.3 envelope need a fresh export.
+
+### Bring a synthetic case
+
+Start from [examples/inventory.case.json](examples/inventory.case.json). A `rowglass.case.v1` pack contains a contract, structured table schemas, fixtures, proposed SQL and a trusted reference. The existing `baselineSQL` field means **proposal under test**; `referenceSQL` means **trusted behavioral baseline**. Raw DDL is rejected.
+
+Limits include 6 tables, 16 columns per table, 30 fixtures and 100 input rows per fixture. Columns support integer, real and text; each table starts with an integer primary key, and foreign keys reference an earlier table. See [CASE-PACKS.md](docs/CASE-PACKS.md) for byte limits, formats and CLI behavior.
+
+## Private provider setup
+
+Local checking needs no keys. The server-side names are documented in [.env.example](.env.example):
+
+| Variable | Purpose |
+| --- | --- |
+| `NEBIUS_API_KEY` | Private Token Factory credential |
+| `ROWGLASS_PROVIDER_MODE` | Must explicitly be `private` to allow keyed requests |
+| `ROWGLASS_PUBLIC` | Must explicitly be `false`; `true` disables provider/search calls |
+| `NEBIUS_MODEL` | Optional `nvidia/...` model override |
+| `TAVILY_API_KEY` | Optional official SQLite documentation search |
+
+Supply credentials through the process environment on a trusted loopback Node server/CLI, never browser code or source control. Then a private configured run can use:
+
+```sh
+node cli/rowglass.mjs repair examples/inventory.case.json --out /tmp/model-review
+```
+
+The fixed inference endpoint is `https://api.tokenfactory.nebius.com/v1/chat/completions`; the documented default model is `nvidia/nvidia-nemotron-3-nano-30b-a3b`. Verify actual catalog availability before a live run. The public Worker unconditionally forces local-only mode, regardless of keys. The private in-memory hourly cap is not durable authorization or a shared quota ledger. Public live inference requires a separately reviewed identity, allowance and concurrency design.
+
+Optional Tavily search uses four fixed generic topics, official SQLite domains and bounded validated HTTPS results. It sends no case SQL, identifiers or rows. Sources explain semantics; they never grade a query or change the trusted reference. Actual Tavily runtime remains unverified.
+
+## Evaluation and boundaries
+
+The [frozen corpus](benchmark/README.md) contains 24 hand-authored changes across six schemas: 18 wrong mutations and six equivalent rewrites. Built-in reference queries, deliberately incorrect repairs and custom inventory fixtures provide separate evaluator controls. The one-shot versus execution-feedback harness separates visible repair feedback from held-out scoring; its current coverage uses injected proposals, without live service results.
+
+- Comparisons preserve duplicate counts and exact column names, including empty outputs; row order is ignored.
+- SQLite integer results are supported only within JavaScript's safe integer range. Larger values are rejected rather than rounded. Finite real values use exact comparison, without tolerance.
+- A greedy reducer seeks a row-irreducible mismatch under its procedure, not a globally smallest database.
+- SQL executes in a disposable browser worker or Node thread with a timeout and bounded outputs. This is not a complete WebAssembly memory sandbox.
+- Finite agreement is not universal correctness, a security certification or evidence of business intent.
+
+See [VALIDATION.md](docs/VALIDATION.md) for recorded checks, failure cases and limits. No real-user time savings, adoption study or winning odds are claimed.
+
+## Project map
+
+| Path | Purpose |
+| --- | --- |
+| `src/engine.mjs`, `src/sql-worker.mjs` | Validation, SQLite execution, comparison and reduction |
+| `src/agent.mjs`, `server/api.mjs` | Bounded private proposal/feedback loop |
+| `src/evidence.mjs`, `src/regression.mjs` | Portable review and reduced regression evidence |
+| `cli/` | Regular-file I/O, checking and independent replay |
+| `benchmark/` | Frozen manifest, controls and evaluation protocol |
+| `src/App.jsx`, `src/style.css` | Review workbench |
+| `tests/`, `docs/` | Regression tests, validation and product/release records |
+
+## Contributing and license
+
+Open a focused issue with synthetic SQL, schema, expected behavior and a minimal fixture. Run `npm run check` and the relevant CLI replay before proposing a pull request. Do not include production rows, credentials or private query material. Changes to provider access must preserve the fail-closed public boundary.
+
+[MIT](LICENSE). Bundled libraries/fonts retain their own licenses: [third-party notices](THIRD-PARTY-NOTICES.md), [license copies](licenses/) and `/licenses.txt`. Development history and assistance are recorded in [the project disclosure](docs/AI-DISCLOSURE.md).
