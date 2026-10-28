@@ -45,6 +45,8 @@ Retain read-only SELECT/CTE checks, generated typed DDL, bound fixture insertion
 
 Keep eight-second worker termination, 32 columns, 1,000 rows, 10,000-character text cells and one million serialized row characters per query. Disable blob allocation/format functions. The Node JS old-generation cap is not a WebAssembly memory sandbox. Do not expand limits to hide failures. Per-query errors and invalid reference/fixture errors remain distinct.
 
+Result comparisons default to unordered multiset equality for older cases. A case can opt into `comparison: "ordered"`, which compares the output sequence and is retained in exported case packs, regression cases, model context and replay. Ordered queries need a stable complete `ORDER BY`; the selected reference remains an author-provided assumption. Warn for obvious random/current-time expressions, never present this limited heuristic as a complete determinism check, and do not minimize a detected volatile mismatch.
+
 ## Regression case contract
 
 `createRegressionCase(scenario, query, witness)` produces the existing strict `rowglass.case.v1` format. It contains the typed schema, business contract, proposed failing query as `baselineSQL`, trusted `referenceSQL` and one exact valid reduced fixture. Require a non-error divergent witness. Validate, compile and execute the returned pack before download. Missing or agreeing result snapshots cannot manufacture a regression case. A zero-row database is a valid witness if execution still reproduces the disagreement.

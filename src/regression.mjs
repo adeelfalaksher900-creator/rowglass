@@ -13,13 +13,13 @@ function isResultSnapshot(result) {
       || (typeof value === 'number' && Number.isFinite(value))));
 }
 
-function requireDivergingWitness(witness) {
+function requireDivergingWitness(witness,comparison) {
   if (!witness || witness.pass !== false || witness.invalid
     || witness.error !== undefined && witness.error !== null) {
     throw new Error('Export requires a valid, non-error mismatch witness.');
   }
   if (!isResultSnapshot(witness.expected) || !isResultSnapshot(witness.actual)
-    || equalResults(witness.expected, witness.actual)) {
+    || equalResults(witness.expected, witness.actual,comparison)) {
     throw new Error('Export requires divergent expected and proposed result snapshots.');
   }
   if (!witness.rows || typeof witness.rows !== 'object' || Array.isArray(witness.rows)) {
@@ -45,13 +45,14 @@ function requireForeignKeys(pack) {
 // Compilation checks the artifact structure. Its result snapshot comes from the
 // caller's current evaluator; executing the exported pack independently replays it.
 export function createRegressionCase(scenario, query, witness) {
-  requireDivergingWitness(witness);
   const source = toCasePack(scenario);
+  requireDivergingWitness(witness,source.comparison??'unordered');
   const pack = {
     format: 'rowglass.case.v1',
     id: source.id,
     title: source.title,
     contract: source.contract,
+    ...(source.comparison?{comparison:source.comparison}:{}),
     tables: structuredClone(source.tables),
     baselineSQL: query,
     referenceSQL: source.referenceSQL,

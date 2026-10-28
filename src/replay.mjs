@@ -79,11 +79,11 @@ function recompute(SQL,scenario,fixtures,sql){
   return {passed:results.filter(r=>r.pass).length,total:results.length,results,witness:null};
 }
 
-function outcome(value){
+function outcome(value,comparison){
   return {
     pass:value.pass,invalid:!!value.invalid,error:value.error??null,
-    expected:value.expected===undefined?null:canonical(value.expected),
-    actual:value.actual===undefined?null:canonical(value.actual)
+    expected:value.expected===undefined?null:canonical(value.expected,comparison),
+    actual:value.actual===undefined?null:canonical(value.actual,comparison)
   };
 }
 
@@ -94,7 +94,7 @@ function compareSnapshot(scenario,fixtures,recorded,replayed,label){
   for(const [index,current] of replayed.results.entries()){
     const saved=recorded.results[index];
     if(fixtureIdentity(scenario,saved)!==fixtureIdentity(scenario,fixtures[index]))differences.push(`${label}/${current.id}: recorded fixture identity differs.`);
-    if(JSON.stringify(outcome(saved))!==JSON.stringify(outcome(current)))differences.push(`${label}/${current.id}: recorded outcome differs.`);
+    if(JSON.stringify(outcome(saved,scenario.comparison))!==JSON.stringify(outcome(current,scenario.comparison)))differences.push(`${label}/${current.id}: recorded outcome differs.`);
   }
   return differences;
 }

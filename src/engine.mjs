@@ -35,11 +35,40 @@ function normalizeOutputValue(value){
   return value;
 }
 
-export function canonical(result){
+export function canonical(result,comparison='unordered'){
+  if(!['unordered','ordered'].includes(comparison))throw new Error('Unknown row comparison mode.');
   const columns=result[0]?.columns||[];const values=result[0]?.values||[];
-  return {columns,values:values.map(row=>JSON.stringify(row.map(normalizeOutputValue))).sort()};
+  const serialized=values.map(row=>JSON.stringify(row.map(normalizeOutputValue)));
+  if(comparison==='unordered')serialized.sort();
+  return {columns,values:serialized};
 }
-export function equalResults(a,b){const x=canonical(a),y=canonical(b);return JSON.stringify(x)===JSON.stringify(y);}
+export function equalResults(a,b,comparison='unordered'){const x=canonical(a,comparison),y=canonical(b,comparison);return JSON.stringify(x)===JSON.stringify(y);}
+
+// Heuristic only: SQLite has other ways to depend on time, randomness or
+// external state. Strip comments and quoted identifiers so examples inside
+// comments and aliases do not look like calls. Keep the literal 'now' visible.
+export function sqlVolatilityWarnings(sql,label='Query'){
+  if(typeof sql!=='string')return [];
+  let clean='',i=0;
+  while(i<sql.length){
+    const c=sql[i],n=sql[i+1];
+    if(c==='-'&&n==='-'){while(i<sql.length&&sql[i]!=='\n')i++;clean+=' ';continue;}
+    if(c==='/'&&n==='*'){const end=sql.indexOf('*/',i+2);i=end<0?sql.length:end+2;clean+=' ';continue;}
+    if(c==="'"||c==='"'||c==='`'||c==='['){
+      const quote=c,close=c==='['?']':c;let value='';i++;
+      while(i<sql.length){if(sql[i]===close){if(sql[i+1]===close){value+=close;i+=2;continue;}i++;break;}value+=sql[i++];}
+      clean+=quote==="'"&&value.toLowerCase()==='now'?' __rowglass_now__ ':' value ';
+      continue;
+    }
+    clean+=c;i++;
+  }
+  const warnings=[];
+  if(/\brandom\s*\(/i.test(clean))warnings.push(`${label} uses RANDOM(), so separate executions may return different results.`);
+  if(/\bcurrent_(?:date|time|timestamp)\b/i.test(clean)||/\b(?:date|time|datetime|julianday|unixepoch|strftime|timediff)\s*\(\s*\)/i.test(clean)||/\b(?:date|time|datetime|julianday|unixepoch|strftime|timediff)\s*\([^)]*\b__rowglass_now__\b/i.test(clean)){
+    warnings.push(`${label} appears to use the current time, so separate executions may return different results.`);
+  }
+  return warnings;
+}
 export function validateRows(scenario, rows){
   if(!rows||typeof rows!=='object'||Array.isArray(rows))throw new Error('A fixture must contain table rows.');
   const known=scenario.schema.map(t=>t.name);if(Object.keys(rows).some(k=>!known.includes(k)))throw new Error('Unknown table in fixture.');
@@ -57,7 +86,7 @@ export function execute(SQL,scenario,rows,sql){
     db.run('PRAGMA foreign_keys=ON');for(const table of scenario.schema)db.run(table.ddl);for(const table of scenario.schema){const stmt=db.prepare(`INSERT INTO "${table.name}" VALUES (${table.columns.map(()=>'?').join(',')})`);try{for(const r of rows[table.name])stmt.run(r);}finally{stmt.free();}}db.run('PRAGMA query_only=ON');const q=db.prepare(sql);try{const columns=q.getColumnNames(),values=[];let resultBytes=0;if(columns.length>32)throw new Error('Use at most 32 output columns.');while(q.step()){if(values.length>=1000)throw new Error('Query returned more than 1,000 rows. Narrow the result.');const row=q.get(null,{useBigInt:true}).map(normalizeOutputValue);if(row.some(v=>v instanceof Uint8Array||(typeof v==='string'&&v.length>10000)))throw new Error('An output value exceeds the supported text size or is binary.');resultBytes+=JSON.stringify(row).length;if(resultBytes>1000000)throw new Error('Query output exceeds the review size limit.');values.push(row);}return [{columns,values}];}finally{q.free();}}finally{db.close();}
 }
 export function compare(SQL,scenario,fixture,sql){
-  try {const expected=execute(SQL,scenario,fixture.rows,scenario.reference);let actual;try{actual=execute(SQL,scenario,fixture.rows,sql);}catch(e){return {...fixture,pass:false,expected,actual:[],error:e.message};}return {...fixture,pass:equalResults(expected,actual),expected,actual};}catch(e){return {...fixture,invalid:true,pass:false,error:e.message};}
+  try {const expected=execute(SQL,scenario,fixture.rows,scenario.reference);let actual;try{actual=execute(SQL,scenario,fixture.rows,sql);}catch(e){return {...fixture,pass:false,expected,actual:[],error:e.message};}return {...fixture,pass:equalResults(expected,actual,scenario.comparison??'unordered'),expected,actual};}catch(e){return {...fixture,invalid:true,pass:false,error:e.message};}
 }
 export const rowCount = rows => Object.values(rows).reduce((sum,r)=>sum+r.length,0);
 export function minimize(SQL,scenario,fixture,sql){
@@ -69,5 +98,14 @@ export function minimize(SQL,scenario,fixture,sql){
 export function evaluate(SQL,scenario,sql,extra=[]){
   const cases=[scenario.starter,...scenario.cases,...extra];const results=cases.map(f=>compare(SQL,scenario,f,sql));
   const mismatch=results.find(r=>!r.pass&&!r.invalid&&!r.error);
-  return {passed:results.filter(r=>r.pass).length,total:results.length,results,witness:mismatch?minimize(SQL,scenario,mismatch,sql):null};
+  const warnings=[...sqlVolatilityWarnings(scenario.reference,'Reference query'),...sqlVolatilityWarnings(sql,'Proposed query')];
+  return {passed:results.filter(r=>r.pass).length,total:results.length,results,witness:mismatch&&!warnings.length?minimize(SQL,scenario,mismatch,sql):null,comparison:scenario.comparison??'unordered',warnings};
+}
+
+export function validateReferenceCheck(report){
+  if(report.passed!==report.total){
+    const warning=report.warnings?.[0];
+    throw new Error(warning?`${warning} The reference self-check failed. Use deterministic SQL; volatility detection is incomplete.`:'The reference or fixture constraints failed. Check the case pack.');
+  }
+  return report;
 }

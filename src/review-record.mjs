@@ -12,6 +12,6 @@ export function createReviewRecord({scenario, query, report, candidate, candidat
     }:null,
     modelCalls,stress:{enabled:stress,seed,count:stress?24:0},
     recordedAt:new Date().toISOString(),
-    limitations:['Synthetic SQLite; developer-owned reference assumption.','Finite passing tests do not prove semantic equivalence.','Provider metadata is not independently signed proof.']
+    limitations:['Synthetic SQLite; developer-owned reference assumption.','Finite passing tests do not prove semantic equivalence.','Queries must be deterministic; volatility detection is incomplete.','Provider metadata is not independently signed proof.']
   };
 }

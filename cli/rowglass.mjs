@@ -37,6 +37,7 @@ async function main(){
   const s=compileCasePack(source),pack=s.pack;
   const sql=opts['--query']?await readBoundedText(resolve(opts['--query']),48000,'Query file'):s.broken;
   let baseline=await evaluateIsolated({pack,sql});
+  for(const warning of baseline.warnings||[])console.error(`Rowglass warning: ${warning} Volatility detection is incomplete.`);
   if(baseline.results.some(r=>r.invalid))throw new Error('Reference SQL or fixture constraints are invalid.');
   let report=baseline,candidate=null,modelCalls=[];
   if(command==='repair'){
@@ -47,11 +48,12 @@ async function main(){
       requestProposal:async task=>{const r=await api(new Request('http://localhost/api/agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenarioId:s.id,scenarioContext:modelContext(s),...task})}),process.env);const data=await r.json();if(!r.ok)throw new Error(data.error);return data;},
       onStep:step=>console.error(`Rowglass: ${step.phase} ${step.round||''}`)
     });candidate=result.candidate;report=result.candidateReport;modelCalls=result.calls;
+    for(const warning of report?.warnings||[])console.error(`Rowglass candidate warning: ${warning} Volatility detection is incomplete.`);
     baseline=await evaluateIsolated({pack,sql,extra:result.extra});
   }
   const fixtures=baseline.results.map(({id,label,rows})=>({id,label,rows}));
   const execution={fixtures,original:baseline,...(candidate?{candidate:report}:{})};
-  const record={version:'0.3.0',scenario:{id:s.id,title:s.title,contract:s.spec},casePack:pack,query:sql,candidate,execution,report:baseline,baseline,candidateReport:candidate?report:null,modelCalls,recordedAt:new Date().toISOString(),limitations:['Synthetic SQLite, finite tests, author-supplied reference.','Model response IDs are provider metadata, not independently signed proof.']};
+  const record={version:'0.3.0',scenario:{id:s.id,title:s.title,contract:s.spec},casePack:pack,query:sql,candidate,execution,report:baseline,baseline,candidateReport:candidate?report:null,modelCalls,recordedAt:new Date().toISOString(),limitations:['Synthetic SQLite, finite tests, author-supplied reference.','Queries must be deterministic; volatility detection is incomplete.','Model response IDs are provider metadata, not independently signed proof.']};
   const reviewText=await serializeReview(record);
   await writeNewText(prefix+'.json',reviewText);await writeNewText(prefix+'.md',reviewMarkdown(record));
   if(candidate){await writeNewText(prefix+'.candidate.sql',candidate.sql+'\n');await writeNewText(prefix+'.patch',unifiedPatch(sql,candidate.sql,opts['--query']?relative(process.cwd(),resolve(opts['--query'])):'query.sql'));}
